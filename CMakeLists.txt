@@ -9,6 +9,7 @@ project(tree_seeker)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  mavros
   std_msgs
 )
 
@@ -104,7 +105,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES tree_seeker
-#  CATKIN_DEPENDS roscpp std_msgs
+#  CATKIN_DEPENDS roscpp mavros std_msgs
 #  DEPENDS system_lib
 )
 
@@ -115,7 +116,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -212,3 +213,9 @@ target_link_libraries(circle ${catkin_LIBRARIES})
 
 add_executable(randomly src/randomly.cpp)
 target_link_libraries(randomly ${catkin_LIBRARIES})
+
+add_executable(subscriber src/subscriber.cpp)
+target_link_libraries(subscriber ${catkin_LIBRARIES})
+
+add_executable(sub2 src/sub2.cpp)
+target_link_libraries(sub2 ${catkin_LIBRARIES})
