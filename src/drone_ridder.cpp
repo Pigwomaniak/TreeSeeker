@@ -10,23 +10,27 @@
 #include <time.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Point.h>
+#include <sensor_msgs/NavSatFix.h>
 
-
-void positionOffset_cb(const geometry_msgs::Point::ConstPtr& poseOffset)
+void positionOffset_cb(const geometry_msgs::Point::ConstPtr& msg)
 {
-
+	geometry_msgs::Point pos_offset = *msg;
 }
 
-
-void positionGlobal_cb(const geometry_msgs::Point::ConstPtr& posGlobal)
+void positionGlobal_cb(const sensor_msgs::NavSatFix::ConstPtr& msg)
 {
-
+	sensor_msgs::NavSatFix global_pos = *msg;
 }
 
-
-void modeChange_cb(const std_msgs::String::ConstPtr& newMode)
+void LocalPositionSet_cb(const geometry_msgs::Point::ConstPtr& msg)
 {
+	geometry_msgs::Point LocalPositionSet = *msg;
+}
 
+void modeChange_cb(const std_msgs::String::ConstPtr& msg)
+{
+	std_msgs::String mode = *msg;
+	set_mode(mode.data);
 }
 
 int main(int argc, char** argv)
@@ -37,7 +41,10 @@ int main(int argc, char** argv)
 	
 	//initialize control publisher/subscribers
 	init_publisher_subscriber(drone_ridder);
-	//ros::Subscriber sub = drone_ridder.subscribe("/tree_seeker/drone_ridder/pos_offset", 1, positionOffset_cb);
+	ros::Subscriber set_pos_offset_sub = drone_ridder.subscribe("drone_ridder/pos_offset", 1, positionOffset_cb);
+	ros::Subscriber set_pos_global_sub = drone_ridder.subscribe("drone_ridder/pos_offset", 1, positionGlobal_cb);
+	ros::Subscriber set_pos_local_sub = drone_ridder.subscribe("drone_ridder/pos_offset", 1, LocalPositionSet_cb);
+	ros::Subscriber set_mode_sub = drone_ridder.subscribe("drone_ridder/pos_offset", 1, modeChange_cb);
 
   	// wait for FCU connection
 	wait4connect();
