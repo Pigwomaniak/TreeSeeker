@@ -17,6 +17,7 @@
 #include <ros/duration.h>
 #include <iostream>
 #include <string>
+#include <sensor_msgs/NavSatFix.h>
 
 
 /**
@@ -30,6 +31,8 @@ nav_msgs::Odometry current_pose_g;
 geometry_msgs::Pose correction_vector_g;
 geometry_msgs::Point local_offset_pose_g;
 geometry_msgs::PoseStamped waypoint_g;
+sensor_msgs::NavSatFix global_pose_g;
+sensor_msgs::NavSatFix global_position_zero_local;
 
 float current_heading_g;
 float local_offset_g;
@@ -41,6 +44,7 @@ float local_desired_heading_g;
 ros::Publisher local_pos_pub;
 ros::Subscriber currentPos;
 ros::Subscriber state_sub;
+ros::Subscriber global_pos_sub;
 ros::ServiceClient arming_client;
 ros::ServiceClient land_client;
 ros::ServiceClient set_mode_client;
@@ -94,6 +98,14 @@ void pose_cb(const nav_msgs::Odometry::ConstPtr& msg)
   //ROS_INFO("Current Heading %f origin", current_heading_g);
   //ROS_INFO("x: %f y: %f z: %f", current_pose_g.pose.pose.position.x, current_pose_g.pose.pose.position.y, current_pose_g.pose.pose.position.z);
 }
+
+
+void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg)
+{
+	global_pose_g = *msg;
+}
+
+
 geometry_msgs::Point get_current_location()
 {
 	geometry_msgs::Point current_pos_local;
@@ -104,6 +116,11 @@ geometry_msgs::Point get_current_location()
 float get_current_heading()
 {
 	return current_heading_g;
+}
+
+sensor_msgs::NavSatFix get_current_pos_global()
+{
+	return global_pose_g;
 }
 
 
@@ -251,8 +268,10 @@ int initialize_local_frame()
 	local_offset_pose_g.z = local_offset_pose_g.z/30;
 	//local_offset_g /= 30;
 	local_offset_g = 90;
+	global_position_zero_local = global_pose_g;
 	ROS_INFO("Coordinate offset set");
 	ROS_INFO("the X' axis is facing: %f", local_offset_g);
+	ROS_INFO("Zero global position is: (LAT: %f; LONG: %f ALT: %f)", global_pose_g.latitude, global_pose_g.longitude, global_pose_g.altitude);
 	return 0;
 }
 
@@ -453,6 +472,7 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 	local_pos_pub = controlnode.advertise<geometry_msgs::PoseStamped>((ros_namespace + "/mavros/setpoint_position/local").c_str(), 10);
 	currentPos = controlnode.subscribe<nav_msgs::Odometry>((ros_namespace + "/mavros/global_position/local").c_str(), 10, pose_cb);
 	state_sub = controlnode.subscribe<mavros_msgs::State>((ros_namespace + "/mavros/state").c_str(), 10, state_cb);
+	global_pos_sub = controlnode.subscribe<sensor_msgs::NavSatFix>((ros_namespace + "/mavros/global_position/global").c_str(), 10, global_pos_cb);
 	arming_client = controlnode.serviceClient<mavros_msgs::CommandBool>((ros_namespace + "/mavros/cmd/arming").c_str());
 	land_client = controlnode.serviceClient<mavros_msgs::CommandTOL>((ros_namespace + "/mavros/cmd/land").c_str());
 	set_mode_client = controlnode.serviceClient<mavros_msgs::SetMode>((ros_namespace + "/mavros/set_mode").c_str());
