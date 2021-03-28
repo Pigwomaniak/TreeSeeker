@@ -50,7 +50,7 @@ ros::ServiceClient command_client;
 \ingroup control_functions
 This structure is a convenient way to format waypoints
 */
-struct Simple_waypoint{
+struct simple_waypoint{
 	float x; ///< distance in x with respect to your reference frame
 	float y; ///< distance in y with respect to your reference frame
 	float z; ///< distance in z with respect to your reference frame
@@ -249,7 +249,8 @@ int initialize_local_frame()
 	local_offset_pose_g.x = local_offset_pose_g.x/30;
 	local_offset_pose_g.y = local_offset_pose_g.y/30;
 	local_offset_pose_g.z = local_offset_pose_g.z/30;
-	local_offset_g /= 30;
+	//local_offset_g /= 30;
+	local_offset_g = 90;
 	ROS_INFO("Coordinate offset set");
 	ROS_INFO("the X' axis is facing: %f", local_offset_g);
 	return 0;

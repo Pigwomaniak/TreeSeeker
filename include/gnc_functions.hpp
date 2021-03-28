@@ -94,13 +94,17 @@ void pose_cb(const nav_msgs::Odometry::ConstPtr& msg)
   //ROS_INFO("Current Heading %f origin", current_heading_g);
   //ROS_INFO("x: %f y: %f z: %f", current_pose_g.pose.pose.position.x, current_pose_g.pose.pose.position.y, current_pose_g.pose.pose.position.z);
 }
-geometry_msgs::Point get_current_location()
+
+
+geometry_msgs::Point get_current_location()  
 {
 	geometry_msgs::Point current_pos_local;
 	current_pos_local = enu_2_local(current_pose_g);
 	return current_pos_local;
-
 }
+
+
+
 float get_current_heading()
 {
 	return current_heading_g;
@@ -222,6 +226,7 @@ int wait4start()
 This function will create a local reference frame based on the starting location of the drone. This is typically done right before takeoff. This reference frame is what all of the the set destination commands will be in reference to.
 @returns 0 - frame initialized
 */
+
 int initialize_local_frame()
 {
 	//set the orientation of the local reference frame
@@ -254,6 +259,7 @@ int initialize_local_frame()
 	ROS_INFO("the X' axis is facing: %f", local_offset_g);
 	return 0;
 }
+
 
 int arm()
 {
