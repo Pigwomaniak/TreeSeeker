@@ -5,7 +5,6 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <cmath>
-#include <math.h>
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
@@ -18,6 +17,9 @@
 #include <iostream>
 #include <string>
 #include <sensor_msgs/NavSatFix.h>
+#include <mavros_msgs/HomePosition.h>
+#include <mavros_msgs/GlobalPositionTarget.h>
+#include <geographic_msgs/GeoPointStamped.h>
 
 
 /**
@@ -32,24 +34,27 @@ geometry_msgs::Pose correction_vector_g;
 geometry_msgs::Point local_offset_pose_g;
 geometry_msgs::PoseStamped waypoint_g;
 sensor_msgs::NavSatFix global_pose_g;
-sensor_msgs::NavSatFix global_position_zero_local;
+geographic_msgs::GeoPoint global_home_position;
 
 float current_heading_g;
 float local_offset_g;
 float correction_heading_g = 0;
 float local_desired_heading_g; 
 
-
+bool waypointWasCreated = false;
 
 ros::Publisher local_pos_pub;
-ros::Subscriber currentPos;
+//ros::Publisher global_pos_pub;
+ros::Subscriber currentPos_sub;
 ros::Subscriber state_sub;
 ros::Subscriber global_pos_sub;
+ros::Subscriber global_pos_home_sub;
 ros::ServiceClient arming_client;
 ros::ServiceClient land_client;
 ros::ServiceClient set_mode_client;
 ros::ServiceClient takeoff_client;
 ros::ServiceClient command_client;
+
 /**
 \ingroup control_functions
 This structure is a convenient way to format waypoints
@@ -66,26 +71,10 @@ void state_cb(const mavros_msgs::State::ConstPtr& msg)
 {
   current_state_g = *msg;
 }
-geometry_msgs::Point enu_2_local(nav_msgs::Odometry current_pose_enu)
-{
-  float x = current_pose_enu.pose.pose.position.x;
-  float y = current_pose_enu.pose.pose.position.y;
-  float z = current_pose_enu.pose.pose.position.z;
-  float deg2rad = (M_PI/180);
-  geometry_msgs::Point current_pos_local;
-  current_pos_local.x = x*cos((local_offset_g - 90)*deg2rad) - y*sin((local_offset_g - 90)*deg2rad);
-  current_pos_local.y = x*sin((local_offset_g - 90)*deg2rad) + y*cos((local_offset_g - 90)*deg2rad);
-  current_pos_local.z = z;
-
-  return current_pos_local;
-
-  //ROS_INFO("Local position %f %f %f",X, Y, Z);
-}
 //get current position of drone
 void pose_cb(const nav_msgs::Odometry::ConstPtr& msg)
 {
   current_pose_g = *msg;
-  enu_2_local(current_pose_g);
   float q0 = current_pose_g.pose.pose.orientation.w;
   float q1 = current_pose_g.pose.pose.orientation.x;
   float q2 = current_pose_g.pose.pose.orientation.y;
@@ -94,7 +83,7 @@ void pose_cb(const nav_msgs::Odometry::ConstPtr& msg)
   //ROS_INFO("Current Heading %f ENU", psi*(180/M_PI));
   //Heading is in ENU
   //IS YAWING COUNTERCLOCKWISE POSITIVE?
-  current_heading_g = psi*(180/M_PI) - local_offset_g;
+  current_heading_g = psi*(180/M_PI);
   //ROS_INFO("Current Heading %f origin", current_heading_g);
   //ROS_INFO("x: %f y: %f z: %f", current_pose_g.pose.pose.position.x, current_pose_g.pose.pose.position.y, current_pose_g.pose.pose.position.z);
 }
@@ -105,11 +94,15 @@ void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg)
 	global_pose_g = *msg;
 }
 
+void global_pos_home_cb(const mavros_msgs::HomePosition::ConstPtr& msg){
+    mavros_msgs::HomePosition homePoint = *msg;
+    global_home_position = homePoint.geo;
+}
 
 geometry_msgs::Point get_current_location()
 {
 	geometry_msgs::Point current_pos_local;
-	current_pos_local = enu_2_local(current_pose_g);
+	current_pos_local = current_pose_g.pose.pose.position;
 	return current_pos_local;
 
 }
@@ -133,9 +126,7 @@ This function is used to specify the drone’s heading in the local reference fr
 */
 void set_heading(float heading)
 {
-  local_desired_heading_g = heading; 
-  heading = heading + correction_heading_g + local_offset_g;
-  
+  local_desired_heading_g = heading;
   ROS_INFO("Desired Heading %f ", local_desired_heading_g);
   float yaw = heading*(M_PI/180);
   float pitch = 0;
@@ -164,26 +155,18 @@ void set_heading(float heading)
 This function is used to command the drone to fly to a waypoint. These waypoints should be specified in the local reference frame. This is typically defined from the location the drone is launched. Psi is counter clockwise rotation following the drone’s reference frame defined by the x axis through the right side of the drone with the y axis through the front of the drone. 
 @returns n/a
 */
-void set_destination(float x, float y, float z, float psi)
+void set_local_destination(float x, float y, float z, float psi)
 {
 	set_heading(psi);
-	//transform map to local
-	float deg2rad = (M_PI/180);
-	float Xlocal = x*cos((correction_heading_g + local_offset_g - 90)*deg2rad) - y*sin((correction_heading_g + local_offset_g - 90)*deg2rad);
-	float Ylocal = x*sin((correction_heading_g + local_offset_g - 90)*deg2rad) + y*cos((correction_heading_g + local_offset_g - 90)*deg2rad);
-	float Zlocal = z;
-
-	x = Xlocal + correction_vector_g.position.x + local_offset_pose_g.x;
-	y = Ylocal + correction_vector_g.position.y + local_offset_pose_g.y;
-	z = Zlocal + correction_vector_g.position.z + local_offset_pose_g.z;
 	ROS_INFO("Destination set to x: %f y: %f z: %f origin frame", x, y, z);
-
 	waypoint_g.pose.position.x = x;
 	waypoint_g.pose.position.y = y;
 	waypoint_g.pose.position.z = z;
-
 	local_pos_pub.publish(waypoint_g);
-	
+	waypointWasCreated = true;
+}
+void set_global_destination(float latitude, float longitude, float altitude){
+
 }
 /**
 \ingroup control_functions
@@ -208,8 +191,6 @@ int wait4connect()
 		ROS_INFO("Error connecting to drone");
 		return -1;	
 	}
-	
-	
 }
 /**
 \ingroup control_functions
@@ -239,46 +220,15 @@ int wait4start()
 This function will create a local reference frame based on the starting location of the drone. This is typically done right before takeoff. This reference frame is what all of the the set destination commands will be in reference to.
 @returns 0 - frame initialized
 */
-int initialize_local_frame()
-{
-	//set the orientation of the local reference frame
-	ROS_INFO("Initializing local coordinate system");
-	local_offset_g = 0;
-	for (int i = 1; i <= 30; i++) {
-		ros::spinOnce();
-		ros::Duration(0.1).sleep();
-
-		
-
-		float q0 = current_pose_g.pose.pose.orientation.w;
-		float q1 = current_pose_g.pose.pose.orientation.x;
-		float q2 = current_pose_g.pose.pose.orientation.y;
-		float q3 = current_pose_g.pose.pose.orientation.z;
-		float psi = atan2((2*(q0*q3 + q1*q2)), (1 - 2*(pow(q2,2) + pow(q3,2))) ); // yaw
-
-		local_offset_g += psi*(180/M_PI);
-
-		local_offset_pose_g.x = local_offset_pose_g.x + current_pose_g.pose.pose.position.x;
-		local_offset_pose_g.y = local_offset_pose_g.y + current_pose_g.pose.pose.position.y;
-		local_offset_pose_g.z = local_offset_pose_g.z + current_pose_g.pose.pose.position.z;
-		// ROS_INFO("current heading%d: %f", i, local_offset_g/i);
-	}
-	local_offset_pose_g.x = local_offset_pose_g.x/30;
-	local_offset_pose_g.y = local_offset_pose_g.y/30;
-	local_offset_pose_g.z = local_offset_pose_g.z/30;
-	//local_offset_g /= 30;
-	local_offset_g = 90;
-	global_position_zero_local = global_pose_g;
-	ROS_INFO("Coordinate offset set");
-	ROS_INFO("the X' axis is facing: %f", local_offset_g);
-	ROS_INFO("Zero global position is: (LAT: %f; LONG: %f ALT: %f)", global_pose_g.latitude, global_pose_g.longitude, global_pose_g.altitude);
-	return 0;
-}
 
 int arm()
 {
 	//intitialize first waypoint of mission
-	set_destination(0,0,0,0);
+	set_local_destination(current_pose_g.pose.pose.position.x,
+                          current_pose_g.pose.pose.position.y,
+                          current_pose_g.pose.pose.position.z,
+                          current_heading_g);
+
 	for(int i=0; i<100; i++)
 	{
 		local_pos_pub.publish(waypoint_g);
@@ -315,12 +265,15 @@ The takeoff function will arm the drone and put the drone in a hover above the i
 int takeoff(float takeoff_alt)
 {
 	//intitialize first waypoint of mission
-	set_destination(0,0,takeoff_alt,0);
-	for(int i=0; i<100; i++)
+	set_local_destination(current_pose_g.pose.pose.position.x,
+                       current_pose_g.pose.pose.position.y,
+                       takeoff_alt,
+                       current_heading_g);
+	for(int i=0; i<2; i++)
 	{
 		local_pos_pub.publish(waypoint_g);
 		ros::spinOnce();
-		ros::Duration(0.01).sleep();
+		ros::Duration(0.1).sleep();
 	}
 	// arming
 	ROS_INFO("Arming drone");
@@ -357,37 +310,42 @@ int takeoff(float takeoff_alt)
 /**
 \ingroup control_functions
 This function returns an int of 1 or 0. THis function can be used to check when to request the next waypoint in the mission. 
-@return 1 - waypoint reached 
+@return 1 - waypoint reached of waypoint was not created
 @return 0 - waypoint not reached
 */
 int check_waypoint_reached(float pos_tolerance=0.3, float heading_tolerance=0.01)
 {
-	local_pos_pub.publish(waypoint_g);
-	
-	//check for correct position 
-	float deltaX = abs(waypoint_g.pose.position.x - current_pose_g.pose.pose.position.x);
-    float deltaY = abs(waypoint_g.pose.position.y - current_pose_g.pose.pose.position.y);
-    float deltaZ = 0; //abs(waypoint_g.pose.position.z - current_pose_g.pose.pose.position.z);
-    float dMag = sqrt( pow(deltaX, 2) + pow(deltaY, 2) + pow(deltaZ, 2) );
-    // ROS_INFO("dMag %f", dMag);
-    // ROS_INFO("current pose x %F y %f z %f", (current_pose_g.pose.pose.position.x), (current_pose_g.pose.pose.position.y), (current_pose_g.pose.pose.position.z));
-    // ROS_INFO("waypoint pose x %F y %f z %f", waypoint_g.pose.position.x, waypoint_g.pose.position.y,waypoint_g.pose.position.z);
-    //check orientation
-    float cosErr = cos(current_heading_g*(M_PI/180)) - cos(local_desired_heading_g*(M_PI/180));
-    float sinErr = sin(current_heading_g*(M_PI/180)) - sin(local_desired_heading_g*(M_PI/180));
-    
-    float headingErr = sqrt( pow(cosErr, 2) + pow(sinErr, 2) );
+    if(waypointWasCreated){
+        local_pos_pub.publish(waypoint_g);
+        //check for correct position
+        float deltaX = abs(waypoint_g.pose.position.x - current_pose_g.pose.pose.position.x);
+        float deltaY = abs(waypoint_g.pose.position.y - current_pose_g.pose.pose.position.y);
+        float deltaZ = abs(waypoint_g.pose.position.z - current_pose_g.pose.pose.position.z);
+        float deltaPos = sqrt( pow(deltaX, 2) + pow(deltaY, 2) + pow(deltaZ, 2) );
+        // ROS_INFO("dMag %f", dMag);
+        // ROS_INFO("current pose x %F y %f z %f", (current_pose_g.pose.pose.position.x), (current_pose_g.pose.pose.position.y), (current_pose_g.pose.pose.position.z));
+        // ROS_INFO("waypoint pose x %F y %f z %f", waypoint_g.pose.position.x, waypoint_g.pose.position.y,waypoint_g.pose.position.z);
+        //check orientation
+        float cosErr = cos(current_heading_g*(M_PI/180)) - cos(local_desired_heading_g*(M_PI/180));
+        float sinErr = sin(current_heading_g*(M_PI/180)) - sin(local_desired_heading_g*(M_PI/180));
 
-    // ROS_INFO("current heading %f", current_heading_g);
-    // ROS_INFO("local_desired_heading_g %f", local_desired_heading_g);
-    // ROS_INFO("current heading error %f", headingErr);
+        float headingErr = sqrt( pow(cosErr, 2) + pow(sinErr, 2) );
 
-    if( dMag < pos_tolerance && headingErr < heading_tolerance)
-	{
-		return 1;
-	}else{
-		return 0;
-	}
+        // ROS_INFO("current heading %f", current_heading_g);
+        // ROS_INFO("local_desired_heading_g %f", local_desired_heading_g);
+        // ROS_INFO("current heading error %f", headingErr);
+
+        if( deltaPos < pos_tolerance && headingErr < heading_tolerance)
+        {
+            return 1;
+        }else{
+            //ROS_INFO("On the way");
+            return 0;
+        }
+    } else{
+        return 1;
+    }
+
 }
 /**
 \ingroup control_functions
@@ -395,11 +353,11 @@ this function changes the mode of the drone to a user specified mode. This takes
 @returns 1 - mode change successful
 @returns 0 - mode change not successful
 */
-int set_mode(std::string mode)
+int set_mode(const std::string& mode)
 {
 	mavros_msgs::SetMode srv_setMode;
     srv_setMode.request.base_mode = 0;
-    srv_setMode.request.custom_mode = mode.c_str();
+    srv_setMode.request.custom_mode = mode;
     if(set_mode_client.call(srv_setMode)){
       ROS_INFO("setmode send ok");
 	  return 0;
@@ -432,15 +390,15 @@ int land()
 This function is used to change the speed of the vehicle in guided mode. it takes the speed in meters per second as a float as the input
 @returns 0 for success
 */
-int set_speed(float speed__mps)
+int set_speed(float speed_mps)
 {
 	mavros_msgs::CommandLong speed_cmd;
 	speed_cmd.request.command = 178;
 	speed_cmd.request.param1 = 1; // ground speed type 
-	speed_cmd.request.param2 = speed__mps;
+	speed_cmd.request.param2 = speed_mps;
 	speed_cmd.request.param3 = -1; // no throttle change
 	speed_cmd.request.param4 = 0; // absolute speed
-	ROS_INFO("setting speed to %f", speed__mps);
+	ROS_INFO("setting speed to %f", speed_mps);
 	if(command_client.call(speed_cmd))
 	{
 		ROS_INFO("change speed command succeeded %d", speed_cmd.response.success);
@@ -470,9 +428,13 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 		ROS_INFO("using namespace %s", ros_namespace.c_str());
 	}
 	local_pos_pub = controlnode.advertise<geometry_msgs::PoseStamped>((ros_namespace + "/mavros/setpoint_position/local").c_str(), 10);
-	currentPos = controlnode.subscribe<nav_msgs::Odometry>((ros_namespace + "/mavros/global_position/local").c_str(), 10, pose_cb);
+    // strange error "Client [/mavros] wants topic /mavros/setpoint_position/global to have datatype/md5sum [geographic_msgs/GeoPoseStamped/cc409c8ed6064d8a846fa207bf3fba6b], but our version has [mavros_msgs/GlobalPositionTarget/076ded0190b9e045f9c55264659ef102]. Dropping connection."
+	//global_pos_pub = controlnode.advertise<mavros_msgs::GlobalPositionTarget>((ros_namespace + "/mavros/setpoint_position/global").c_str(), 10);
+    //global_pos_pub = controlnode.advertise<geographic_msgs::GeoPointStamped>((ros_namespace + "/mavros/setpoint_position/global").c_str(), 10);
+	currentPos_sub = controlnode.subscribe<nav_msgs::Odometry>((ros_namespace + "/mavros/global_position/local").c_str(), 10, pose_cb);
 	state_sub = controlnode.subscribe<mavros_msgs::State>((ros_namespace + "/mavros/state").c_str(), 10, state_cb);
 	global_pos_sub = controlnode.subscribe<sensor_msgs::NavSatFix>((ros_namespace + "/mavros/global_position/global").c_str(), 10, global_pos_cb);
+    global_pos_home_sub = controlnode.subscribe<mavros_msgs::HomePosition>((ros_namespace + "/mavros/global_position/home").c_str(), 10, global_pos_home_cb);
 	arming_client = controlnode.serviceClient<mavros_msgs::CommandBool>((ros_namespace + "/mavros/cmd/arming").c_str());
 	land_client = controlnode.serviceClient<mavros_msgs::CommandTOL>((ros_namespace + "/mavros/cmd/land").c_str());
 	set_mode_client = controlnode.serviceClient<mavros_msgs::SetMode>((ros_namespace + "/mavros/set_mode").c_str());
