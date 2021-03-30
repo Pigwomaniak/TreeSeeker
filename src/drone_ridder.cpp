@@ -7,6 +7,9 @@
 
 void positionOffset_cb(const geometry_msgs::Point::ConstPtr& msg){
 	geometry_msgs::Point pos_offset = *msg;
+    set_local_destination(current_pose_g.pose.pose.position.x + pos_offset.x,
+                          current_pose_g.pose.pose.position.y + pos_offset.y,
+                          current_pose_g.pose.pose.position.z + pos_offset.z);
 }
 
 void positionGlobal_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
@@ -16,11 +19,11 @@ void positionGlobal_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
 void localPositionSet_cb(const geometry_msgs::Point::ConstPtr& msg){
 	geometry_msgs::Point localPositionSet = *msg;
 	set_local_destination(localPositionSet.x, localPositionSet.y, localPositionSet.z);
-	ROS_INFO("get LPS");
 }
 
 void headingSet_cb(const std_msgs::Float64::ConstPtr& msg){
     std_msgs::Float64 heading = *msg;
+    set_heading(heading.data);
 }
 
 void modeChange_cb(const std_msgs::String::ConstPtr& msg){
@@ -40,7 +43,7 @@ int main(int argc, char** argv){
 	ros::Subscriber pos_global_sub = drone_ridder.subscribe("/drone_ridder/set_global_position", 1, positionGlobal_cb);
 	ros::Subscriber pos_local_sub = drone_ridder.subscribe("/drone_ridder/set_local_position", 1, localPositionSet_cb);
 	ros::Subscriber mode_sub = drone_ridder.subscribe("/drone_ridder/set_mode", 1, modeChange_cb);
-    ros::Subscriber heading_sub = drone_ridder.subscribe("/drone_ridder/heading", 1, headingSet_cb);
+    ros::Subscriber heading_sub = drone_ridder.subscribe("/drone_ridder/set_heading", 1, headingSet_cb);
   	// wait for FCU connection
 	wait4connect();
 

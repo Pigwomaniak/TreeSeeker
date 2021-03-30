@@ -1,5 +1,5 @@
 # TreeSeeker
-Code for autonomus drone to find sick trees 
+Code for autonomous drone control to find sick trees. 
 
 ## Table of contents
 * [General info](#general-info)
@@ -18,7 +18,7 @@ Add more general information about project. What the purpose of the project is? 
 [Example screenshot](./img/screenshot.png)
 
 ## Technologies
-* Ros noetic
+* Robot Operating System
 * Gazebo 11
 * Ardupilot
 
@@ -35,19 +35,11 @@ To run example program:
 Now the main node is [drone_riddeer](./src/drone_ridder.cpp) this node will provide 5 topisc to publish in for drone control.
 
 * "drone_ridder/set_mode" message `std_msgs::String` where y can rquest of mode hange
-
-###To-do
-
 * "drone_ridder/set_position_offset" message `geometry_msgs::Point` where values x, y, z are vector of movment in ENU.
 * "drone_ridder/set_local_position" message `geometry_msgs::Point` where values x, y, z are destination coordinates in local ENU.
 * "drone_ridder/heading" message `std_msgs::Float64` where value represent YAW angle. 0 is when x is facing Est and risig value i counter clockwise.
+###To-do
 * "drone_ridder/set_global_position" message `sensor_msgs::NavSatFix` set LLA destination possion
-
-This is erly stage of development and none of features are well tested but few functions seems to work fine
-* addin waypoints in adrucopter local coordinate system
-* setting heading
-* arming
-* flight mode hange
 
 ## Status
 Project is: _in progress_

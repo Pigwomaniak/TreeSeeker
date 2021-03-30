@@ -44,7 +44,7 @@ float local_desired_heading_g;
 bool waypointWasCreated = false;
 
 ros::Publisher local_pos_pub;
-//ros::Publisher global_pos_pub;
+ros::Publisher global_pos_pub;
 ros::Subscriber currentPos_sub;
 ros::Subscriber state_sub;
 ros::Subscriber global_pos_sub;
