@@ -38,9 +38,10 @@ Now the main node is [drone_riddeer](./src/drone_ridder.cpp) this node will prov
 * "drone_ridder/set_position_offset" message `geometry_msgs::Point` where values x, y, z are vector of movment in ENU.
 * "drone_ridder/set_local_position" message `geometry_msgs::Point` where values x, y, z are destination coordinates in local ENU.
 * "drone_ridder/heading" message `std_msgs::Float64` where value represent YAW angle. 0 is when x is facing Est and risig value i counter clockwise.
+* "drone_ridder/set_global_position" message `geographic_msgs::GeoPoseStamped` set LLA destination possion
 ###To-do
-* "drone_ridder/set_global_position" message `sensor_msgs::NavSatFix` set LLA destination possion
 
+* idiot IPE
 ## Status
 Project is: _in progress_
 

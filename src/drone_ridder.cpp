@@ -7,17 +7,23 @@
 
 void positionOffset_cb(const geometry_msgs::Point::ConstPtr& msg){
 	geometry_msgs::Point pos_offset = *msg;
+	activeWaypointLocal = true;
     set_local_destination(current_pose_g.pose.pose.position.x + pos_offset.x,
                           current_pose_g.pose.pose.position.y + pos_offset.y,
                           current_pose_g.pose.pose.position.z + pos_offset.z);
 }
 
-void positionGlobal_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
-	sensor_msgs::NavSatFix global_pos = *msg;
+void positionGlobalSet_cb(const geographic_msgs::GeoPoseStamped::ConstPtr& msg){
+    geographic_msgs::GeoPoseStamped global_pos = *msg;
+	activeWaypointLocal = false;
+    set_global_destination(global_pos.pose.position.latitude,
+                           global_pos.pose.position.longitude,
+                           global_pos.pose.position.altitude);
 }
 
 void localPositionSet_cb(const geometry_msgs::Point::ConstPtr& msg){
 	geometry_msgs::Point localPositionSet = *msg;
+    activeWaypointLocal = true;
 	set_local_destination(localPositionSet.x, localPositionSet.y, localPositionSet.z);
 }
 
@@ -40,64 +46,22 @@ int main(int argc, char** argv){
 	init_publisher_subscriber(drone_ridder);
 
 	ros::Subscriber pos_offset_sub = drone_ridder.subscribe("/drone_ridder/set_position_offset", 1, positionOffset_cb);
-	ros::Subscriber pos_global_sub = drone_ridder.subscribe("/drone_ridder/set_global_position", 1, positionGlobal_cb);
+	ros::Subscriber pos_global_sub = drone_ridder.subscribe("/drone_ridder/set_global_position", 1, positionGlobalSet_cb);
 	ros::Subscriber pos_local_sub = drone_ridder.subscribe("/drone_ridder/set_local_position", 1, localPositionSet_cb);
 	ros::Subscriber mode_sub = drone_ridder.subscribe("/drone_ridder/set_mode", 1, modeChange_cb);
     ros::Subscriber heading_sub = drone_ridder.subscribe("/drone_ridder/set_heading", 1, headingSet_cb);
   	// wait for FCU connection
 	wait4connect();
-
 	//wait for used to switch to mode GUIDED
 	wait4start();
-
-	//create local reference frame
-
 	//request takeoff
 	takeoff(10);
-/*
-	std::vector<simple_waypoint> waypointList;
-	simple_waypoint nextWayPoint;
-	nextWayPoint.x = 0;
-	nextWayPoint.y = 0;
-	nextWayPoint.z = 10;
-	nextWayPoint.psi = 0;
-	waypointList.push_back(nextWayPoint);
-	nextWayPoint.x = 5;
-	nextWayPoint.y = 0;
-	nextWayPoint.z = 5;
-	nextWayPoint.psi = 0;
-	waypointList.push_back(nextWayPoint);
-	nextWayPoint.x = 5;
-	nextWayPoint.y = 5;
-	nextWayPoint.z = 10;
-	nextWayPoint.psi = 90;
-	waypointList.push_back(nextWayPoint);
-	nextWayPoint.x = 0;
-	nextWayPoint.y = 5;
-	nextWayPoint.z = 15;
-	nextWayPoint.psi = 180;
-	waypointList.push_back(nextWayPoint);
-	nextWayPoint.x = 0;
-	nextWayPoint.y = 0;
-	nextWayPoint.z = 10;
-	nextWayPoint.psi = 270;
-	waypointList.push_back(nextWayPoint);
-	nextWayPoint.x = 0;
-	nextWayPoint.y = 0;
-	nextWayPoint.z = 5;
-	nextWayPoint.psi = 0;
-	waypointList.push_back(nextWayPoint);
-
-
-*/
 	//specify control loop rate. We recommend a low frequency to not over load the FCU with messages. Too many messages will cause the drone to be sluggish
 	ros::Rate rate(2.0);
 
-	
-	int counter = 0;
 	while(ros::ok()){
 		ros::spinOnce();
-		check_waypoint_reached();
+		//check_waypoint_reached();
 		rate.sleep();
 	}
 	return 0;

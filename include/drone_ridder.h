@@ -19,7 +19,7 @@
 #include <sensor_msgs/NavSatFix.h>
 #include <mavros_msgs/HomePosition.h>
 #include <mavros_msgs/GlobalPositionTarget.h>
-#include <geographic_msgs/GeoPointStamped.h>
+#include <geographic_msgs/GeoPoseStamped.h>
 
 
 /**
@@ -34,14 +34,15 @@ geometry_msgs::Pose correction_vector_g;
 geometry_msgs::Point local_offset_pose_g;
 geometry_msgs::PoseStamped waypoint_g;
 sensor_msgs::NavSatFix global_pose_g;
-geographic_msgs::GeoPoint global_home_position;
-
+mavros_msgs::HomePosition global_home_position;
+geographic_msgs::GeoPoseStamped waypoint_global;
 float current_heading_g;
 float local_offset_g;
 float correction_heading_g = 0;
 float local_desired_heading_g;
 
 bool waypointWasCreated = false;
+bool activeWaypointLocal = true;
 
 ros::Publisher local_pos_pub;
 ros::Publisher global_pos_pub;
@@ -67,13 +68,11 @@ struct simple_waypoint{
 };
 
 //get armed state
-void state_cb(const mavros_msgs::State::ConstPtr& msg)
-{
+void state_cb(const mavros_msgs::State::ConstPtr& msg){
   current_state_g = *msg;
 }
 //get current position of drone
-void pose_cb(const nav_msgs::Odometry::ConstPtr& msg)
-{
+void pose_cb(const nav_msgs::Odometry::ConstPtr& msg){
   current_pose_g = *msg;
   float q0 = current_pose_g.pose.pose.orientation.w;
   float q1 = current_pose_g.pose.pose.orientation.x;
@@ -89,30 +88,25 @@ void pose_cb(const nav_msgs::Odometry::ConstPtr& msg)
 }
 
 
-void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg)
-{
+void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
 	global_pose_g = *msg;
 }
 
 void global_pos_home_cb(const mavros_msgs::HomePosition::ConstPtr& msg){
     mavros_msgs::HomePosition homePoint = *msg;
-    global_home_position = homePoint.geo;
 }
 
-geometry_msgs::Point get_current_location()
-{
+geometry_msgs::Point get_current_location(){
 	geometry_msgs::Point current_pos_local;
 	current_pos_local = current_pose_g.pose.pose.position;
 	return current_pos_local;
 
 }
-float get_current_heading()
-{
+float get_current_heading(){
 	return current_heading_g;
 }
 
-sensor_msgs::NavSatFix get_current_pos_global()
-{
+sensor_msgs::NavSatFix get_current_pos_global(){
 	return global_pose_g;
 }
 
@@ -124,30 +118,39 @@ sensor_msgs::NavSatFix get_current_pos_global()
 This function is used to specify the drone’s heading in the local reference frame. Psi is a counter clockwise rotation following the drone’s reference frame defined by the x axis through the right side of the drone with the y axis through the front of the drone. 
 @returns n/a
 */
-void set_heading(float heading)
-{
-  local_desired_heading_g = heading;
-  ROS_INFO("Desired Heading %f ", local_desired_heading_g);
-  float yaw = heading*(M_PI/180);
-  float pitch = 0;
-  float roll = 0;
+void set_heading(float heading){
+    local_desired_heading_g = heading;
+    ROS_INFO("Desired Heading %f ", local_desired_heading_g);
+    double yaw = heading*(M_PI/180);
+    double pitch = 0;
+    double roll = 0;
 
-  float cy = cos(yaw * 0.5);
-  float sy = sin(yaw * 0.5);
-  float cr = cos(roll * 0.5);
-  float sr = sin(roll * 0.5);
-  float cp = cos(pitch * 0.5);
-  float sp = sin(pitch * 0.5);
+    double cy = cos(yaw * 0.5);
+    double sy = sin(yaw * 0.5);
+    double cr = cos(roll * 0.5);
+    double sr = sin(roll * 0.5);
+    double cp = cos(pitch * 0.5);
+    double sp = sin(pitch * 0.5);
 
-  float qw = cy * cr * cp + sy * sr * sp;
-  float qx = cy * sr * cp - sy * cr * sp;
-  float qy = cy * cr * sp + sy * sr * cp;
-  float qz = sy * cr * cp - cy * sr * sp;
+    double qw = cy * cr * cp + sy * sr * sp;
+    double qx = cy * sr * cp - sy * cr * sp;
+    double qy = cy * cr * sp + sy * sr * cp;
+    double qz = sy * cr * cp - cy * sr * sp;
 
-  waypoint_g.pose.orientation.w = qw;
-  waypoint_g.pose.orientation.x = qx;
-  waypoint_g.pose.orientation.y = qy;
-  waypoint_g.pose.orientation.z = qz;
+    waypoint_g.pose.orientation.w = qw;
+    waypoint_g.pose.orientation.x = qx;
+    waypoint_g.pose.orientation.y = qy;
+    waypoint_g.pose.orientation.z = qz;
+
+    waypoint_global.pose.orientation.w = qw;
+    waypoint_global.pose.orientation.x = qx;
+    waypoint_global.pose.orientation.y = qy;
+    waypoint_global.pose.orientation.z = qz;
+    if(activeWaypointLocal){
+        local_pos_pub.publish(waypoint_g);
+    }else{
+        global_pos_pub.publish(waypoint_global);
+    }
 }
 // set position to fly to in the local frame
 /**
@@ -166,7 +169,10 @@ void set_local_destination(float x, float y, float z)//, float psi)
 	waypointWasCreated = true;
 }
 void set_global_destination(float latitude, float longitude, float altitude){
-
+    waypoint_global.pose.position.latitude = latitude;
+    waypoint_global.pose.position.longitude = longitude;
+    waypoint_global.pose.position.altitude = altitude;
+    global_pos_pub.publish(waypoint_global);
 }
 /**
 \ingroup control_functions
@@ -319,18 +325,18 @@ int check_waypoint_reached(float pos_tolerance=0.3, float heading_tolerance=0.01
     if(waypointWasCreated){
         local_pos_pub.publish(waypoint_g);
         //check for correct position
-        float deltaX = abs(waypoint_g.pose.position.x - current_pose_g.pose.pose.position.x);
-        float deltaY = abs(waypoint_g.pose.position.y - current_pose_g.pose.pose.position.y);
-        float deltaZ = abs(waypoint_g.pose.position.z - current_pose_g.pose.pose.position.z);
-        float deltaPos = sqrt( pow(deltaX, 2) + pow(deltaY, 2) + pow(deltaZ, 2) );
+        double deltaX = abs(waypoint_g.pose.position.x - current_pose_g.pose.pose.position.x);
+        double deltaY = abs(waypoint_g.pose.position.y - current_pose_g.pose.pose.position.y);
+        double deltaZ = abs(waypoint_g.pose.position.z - current_pose_g.pose.pose.position.z);
+        double deltaPos = sqrt( pow(deltaX, 2) + pow(deltaY, 2) + pow(deltaZ, 2) );
         // ROS_INFO("dMag %f", dMag);
         // ROS_INFO("current pose x %F y %f z %f", (current_pose_g.pose.pose.position.x), (current_pose_g.pose.pose.position.y), (current_pose_g.pose.pose.position.z));
         // ROS_INFO("waypoint pose x %F y %f z %f", waypoint_g.pose.position.x, waypoint_g.pose.position.y,waypoint_g.pose.position.z);
         //check orientation
-        float cosErr = cos(current_heading_g*(M_PI/180)) - cos(local_desired_heading_g*(M_PI/180));
-        float sinErr = sin(current_heading_g*(M_PI/180)) - sin(local_desired_heading_g*(M_PI/180));
+        double cosErr = cos(current_heading_g*(M_PI/180)) - cos(local_desired_heading_g*(M_PI/180));
+        double sinErr = sin(current_heading_g*(M_PI/180)) - sin(local_desired_heading_g*(M_PI/180));
 
-        float headingErr = sqrt( pow(cosErr, 2) + pow(sinErr, 2) );
+        double headingErr = sqrt( pow(cosErr, 2) + pow(sinErr, 2) );
 
         // ROS_INFO("current heading %f", current_heading_g);
         // ROS_INFO("local_desired_heading_g %f", local_desired_heading_g);
@@ -410,7 +416,6 @@ int set_speed(float speed_mps)
 		return -1;
 	}
 	ROS_INFO("change speed result was %d ", speed_cmd.response.result);
-	return 0;
 }
 /**
 \ingroup control_functions
@@ -428,18 +433,18 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 		controlnode.getParam("namespace", ros_namespace);
 		ROS_INFO("using namespace %s", ros_namespace.c_str());
 	}
-	local_pos_pub = controlnode.advertise<geometry_msgs::PoseStamped>((ros_namespace + "/mavros/setpoint_position/local").c_str(), 10);
-    // strange error "Client [/mavros] wants topic /mavros/setpoint_position/global to have datatype/md5sum [geographic_msgs/GeoPoseStamped/cc409c8ed6064d8a846fa207bf3fba6b], but our version has [mavros_msgs/GlobalPositionTarget/076ded0190b9e045f9c55264659ef102]. Dropping connection."
-	//global_pos_pub = controlnode.advertise<mavros_msgs::GlobalPositionTarget>((ros_namespace + "/mavros/setpoint_position/global").c_str(), 10);
-    //global_pos_pub = controlnode.advertise<geographic_msgs::GeoPointStamped>((ros_namespace + "/mavros/setpoint_position/global").c_str(), 10);
-	currentPos_sub = controlnode.subscribe<nav_msgs::Odometry>((ros_namespace + "/mavros/global_position/local").c_str(), 10, pose_cb);
-	state_sub = controlnode.subscribe<mavros_msgs::State>((ros_namespace + "/mavros/state").c_str(), 10, state_cb);
-	global_pos_sub = controlnode.subscribe<sensor_msgs::NavSatFix>((ros_namespace + "/mavros/global_position/global").c_str(), 10, global_pos_cb);
-    global_pos_home_sub = controlnode.subscribe<mavros_msgs::HomePosition>((ros_namespace + "/mavros/global_position/home").c_str(), 10, global_pos_home_cb);
-	arming_client = controlnode.serviceClient<mavros_msgs::CommandBool>((ros_namespace + "/mavros/cmd/arming").c_str());
-	land_client = controlnode.serviceClient<mavros_msgs::CommandTOL>((ros_namespace + "/mavros/cmd/land").c_str());
-	set_mode_client = controlnode.serviceClient<mavros_msgs::SetMode>((ros_namespace + "/mavros/set_mode").c_str());
-	takeoff_client = controlnode.serviceClient<mavros_msgs::CommandTOL>((ros_namespace + "/mavros/cmd/takeoff").c_str());
-	command_client = controlnode.serviceClient<mavros_msgs::CommandLong>((ros_namespace + "/mavros/cmd/command").c_str());
+	local_pos_pub = controlnode.advertise<geometry_msgs::PoseStamped>(ros_namespace + "/mavros/setpoint_position/local", 1);
+    //global_pos_pub = controlnode.advertise<mavros_msgs::GlobalPositionTarget>((ros_namespace + "/mavros/setpoint_position/global").c_str(), 10);
+    global_pos_pub = controlnode.advertise<geographic_msgs::GeoPoseStamped>(ros_namespace + "/mavros/setpoint_position/global", 1);
+	currentPos_sub = controlnode.subscribe<nav_msgs::Odometry>(ros_namespace + "/mavros/global_position/local", 10, pose_cb);
+	state_sub = controlnode.subscribe<mavros_msgs::State>(ros_namespace + "/mavros/state", 10, state_cb);
+	global_pos_sub = controlnode.subscribe<sensor_msgs::NavSatFix>(ros_namespace + "/mavros/global_position/global", 10, global_pos_cb);
+    global_pos_home_sub = controlnode.subscribe<mavros_msgs::HomePosition>(ros_namespace + "/mavros/global_position/home", 10, global_pos_home_cb);
+	arming_client = controlnode.serviceClient<mavros_msgs::CommandBool>(ros_namespace + "/mavros/cmd/arming");
+	land_client = controlnode.serviceClient<mavros_msgs::CommandTOL>(ros_namespace + "/mavros/cmd/land");
+	set_mode_client = controlnode.serviceClient<mavros_msgs::SetMode>(ros_namespace + "/mavros/set_mode");
+	takeoff_client = controlnode.serviceClient<mavros_msgs::CommandTOL>(ros_namespace + "/mavros/cmd/takeoff");
+	command_client = controlnode.serviceClient<mavros_msgs::CommandLong>(ros_namespace + "/mavros/cmd/command");
 	return 0;
 }
+
