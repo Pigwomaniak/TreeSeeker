@@ -222,3 +222,6 @@ target_link_libraries(sub2 ${catkin_LIBRARIES})
 
 add_executable(drone_ridder src/drone_ridder.cpp)
 target_link_libraries(drone_ridder ${catkin_LIBRARIES})
+
+add_executable(test_DR_square src/test_DR_square.cpp)
+target_link_libraries(test_DR_square ${catkin_LIBRARIES})

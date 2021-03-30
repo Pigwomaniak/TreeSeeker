@@ -1,5 +1,5 @@
 #include <drone_ridder.h>
-#include <queue>
+//#include <queue>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Point.h>
 #include <sensor_msgs/NavSatFix.h>
@@ -14,7 +14,9 @@ void positionGlobal_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
 }
 
 void localPositionSet_cb(const geometry_msgs::Point::ConstPtr& msg){
-	geometry_msgs::Point LocalPositionSet = *msg;
+	geometry_msgs::Point localPositionSet = *msg;
+	set_local_destination(localPositionSet.x, localPositionSet.y, localPositionSet.z);
+	ROS_INFO("get LPS");
 }
 
 void headingSet_cb(const std_msgs::Float64::ConstPtr& msg){
@@ -33,11 +35,12 @@ int main(int argc, char** argv){
 	
 	//initialize control publisher/subscribers
 	init_publisher_subscriber(drone_ridder);
-	ros::Subscriber pos_offset_sub = drone_ridder.subscribe("drone_ridder/set_position_offset", 1, positionOffset_cb);
-	ros::Subscriber pos_global_sub = drone_ridder.subscribe("drone_ridder/set_global_position", 1, positionGlobal_cb);
-	ros::Subscriber pos_local_sub = drone_ridder.subscribe("drone_ridder/set_local_position", 1, localPositionSet_cb);
-	ros::Subscriber mode_sub = drone_ridder.subscribe("drone_ridder/set_mode", 1, modeChange_cb);
-    ros::Subscriber heading_sub = drone_ridder.subscribe("drone_ridder/heading", 1, headingSet_cb);
+
+	ros::Subscriber pos_offset_sub = drone_ridder.subscribe("/drone_ridder/set_position_offset", 1, positionOffset_cb);
+	ros::Subscriber pos_global_sub = drone_ridder.subscribe("/drone_ridder/set_global_position", 1, positionGlobal_cb);
+	ros::Subscriber pos_local_sub = drone_ridder.subscribe("/drone_ridder/set_local_position", 1, localPositionSet_cb);
+	ros::Subscriber mode_sub = drone_ridder.subscribe("/drone_ridder/set_mode", 1, modeChange_cb);
+    ros::Subscriber heading_sub = drone_ridder.subscribe("/drone_ridder/heading", 1, headingSet_cb);
   	// wait for FCU connection
 	wait4connect();
 
@@ -48,8 +51,7 @@ int main(int argc, char** argv){
 
 	//request takeoff
 	takeoff(10);
-
-
+/*
 	std::vector<simple_waypoint> waypointList;
 	simple_waypoint nextWayPoint;
 	nextWayPoint.x = 0;
@@ -84,7 +86,7 @@ int main(int argc, char** argv){
 	waypointList.push_back(nextWayPoint);
 
 
-
+*/
 	//specify control loop rate. We recommend a low frequency to not over load the FCU with messages. Too many messages will cause the drone to be sluggish
 	ros::Rate rate(2.0);
 
@@ -92,17 +94,8 @@ int main(int argc, char** argv){
 	int counter = 0;
 	while(ros::ok()){
 		ros::spinOnce();
+		check_waypoint_reached();
 		rate.sleep();
-		if(check_waypoint_reached(.3) == 1){
-			if (counter < waypointList.size()){
-				set_local_destination(waypointList[counter].x, waypointList[counter].y, waypointList[counter].z, waypointList[counter].psi);
-				counter++;	
-			}else{
-				//land after all waypoints are reached
-				land();
-			}	
-		}	
-		
 	}
 	return 0;
 }

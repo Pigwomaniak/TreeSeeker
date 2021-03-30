@@ -39,7 +39,7 @@ geographic_msgs::GeoPoint global_home_position;
 float current_heading_g;
 float local_offset_g;
 float correction_heading_g = 0;
-float local_desired_heading_g; 
+float local_desired_heading_g;
 
 bool waypointWasCreated = false;
 
@@ -155,9 +155,9 @@ void set_heading(float heading)
 This function is used to command the drone to fly to a waypoint. These waypoints should be specified in the local reference frame. This is typically defined from the location the drone is launched. Psi is counter clockwise rotation following the drone’s reference frame defined by the x axis through the right side of the drone with the y axis through the front of the drone. 
 @returns n/a
 */
-void set_local_destination(float x, float y, float z, float psi)
+void set_local_destination(float x, float y, float z)//, float psi)
 {
-	set_heading(psi);
+	//set_heading(psi);
 	ROS_INFO("Destination set to x: %f y: %f z: %f origin frame", x, y, z);
 	waypoint_g.pose.position.x = x;
 	waypoint_g.pose.position.y = y;
@@ -226,8 +226,8 @@ int arm()
 	//intitialize first waypoint of mission
 	set_local_destination(current_pose_g.pose.pose.position.x,
                           current_pose_g.pose.pose.position.y,
-                          current_pose_g.pose.pose.position.z,
-                          current_heading_g);
+                          current_pose_g.pose.pose.position.z);
+	set_heading(current_heading_g);
 
 	for(int i=0; i<100; i++)
 	{
@@ -267,8 +267,9 @@ int takeoff(float takeoff_alt)
 	//intitialize first waypoint of mission
 	set_local_destination(current_pose_g.pose.pose.position.x,
                        current_pose_g.pose.pose.position.y,
-                       takeoff_alt,
-                       current_heading_g);
+                       takeoff_alt);
+	set_heading(current_heading_g);
+
 	for(int i=0; i<2; i++)
 	{
 		local_pos_pub.publish(waypoint_g);
