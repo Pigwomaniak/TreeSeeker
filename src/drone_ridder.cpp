@@ -1,41 +1,6 @@
 #include <drone_ridder.h>
-//#include <queue>
-#include <std_msgs/String.h>
-#include <geometry_msgs/Point.h>
-#include <sensor_msgs/NavSatFix.h>
-#include <std_msgs/Float64.h>
 
-void positionOffset_cb(const geometry_msgs::Point::ConstPtr& msg){
-	geometry_msgs::Point pos_offset = *msg;
-	activeWaypointLocal = true;
-    set_local_destination(current_pose_g.pose.pose.position.x + pos_offset.x,
-                          current_pose_g.pose.pose.position.y + pos_offset.y,
-                          current_pose_g.pose.pose.position.z + pos_offset.z);
-}
 
-void positionGlobalSet_cb(const geographic_msgs::GeoPoseStamped::ConstPtr& msg){
-    geographic_msgs::GeoPoseStamped global_pos = *msg;
-	activeWaypointLocal = false;
-    set_global_destination(global_pos.pose.position.latitude,
-                           global_pos.pose.position.longitude,
-                           global_pos.pose.position.altitude);
-}
-
-void localPositionSet_cb(const geometry_msgs::Point::ConstPtr& msg){
-	geometry_msgs::Point localPositionSet = *msg;
-    activeWaypointLocal = true;
-	set_local_destination(localPositionSet.x, localPositionSet.y, localPositionSet.z);
-}
-
-void headingSet_cb(const std_msgs::Float64::ConstPtr& msg){
-    std_msgs::Float64 heading = *msg;
-    set_heading(heading.data);
-}
-
-void modeChange_cb(const std_msgs::String::ConstPtr& msg){
-	std_msgs::String mode = *msg;
-	set_mode(mode.data);
-}
 
 int main(int argc, char** argv){
 	//initialize ros 

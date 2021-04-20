@@ -1,9 +1,18 @@
-#include <drone_ridder.h>
+//#include <drone_ridder.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Point.h>
 #include <geographic_msgs/GeoPoseStamped.h>
 #include <std_msgs/Float64.h>
+#include <ros/ros.h>
+#include <sensor_msgs/NavSatFix.h>
 
+
+
+sensor_msgs::NavSatFix global_pose_g;
+
+void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
+    global_pose_g = *msg;
+}
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "test_DR_square");
@@ -14,8 +23,8 @@ int main(int argc, char** argv){
     ros::Publisher set_offset_pub = test_DR_square.advertise<geometry_msgs::Point>("/drone_ridder/set_position_offset", 1);
     ros::Publisher set_mode_pub = test_DR_square.advertise<std_msgs::String>("/drone_ridder/set_mode", 1);
     ros::Publisher set_global_pos_pub = test_DR_square.advertise<geographic_msgs::GeoPoseStamped>("/drone_ridder/set_global_position", 1);
-
-    ros::Rate rate(.15);
+    ros::Subscriber global_pose_sub = test_DR_square.subscribe<sensor_msgs::NavSatFix>("/mavros/global_position/local", 10, global_pos_cb);
+    ros::Rate rate(.12);
     geometry_msgs::Point waypoint;
     std_msgs::Float64 heading;
     geometry_msgs::Point positionOffset;
@@ -30,23 +39,47 @@ int main(int argc, char** argv){
 
 
     ROS_INFO("Test of set_global_position");
-    positionGlobal.pose.position.latitude = -35.3632595;
-    positionGlobal.pose.position.longitude = 149.1652423;
-    positionGlobal.pose.position.altitude = 10;
+    positionGlobal.pose.position.latitude = global_pose_g.latitude;
+    positionGlobal.pose.position.longitude = global_pose_g.longitude;
+    positionGlobal.pose.position.altitude = global_pose_g.altitude;
     heading.data = 0;
+
     set_global_pos_pub.publish(positionGlobal);
     set_heading_pub.publish(heading);
     ROS_INFO("waypoint c1");
     ros::spinOnce();
     rate.sleep();
 
-    positionGlobal.pose.position.latitude = -35.3632595;
-    positionGlobal.pose.position.longitude = 149.1652423 + 0.00002;
-    positionGlobal.pose.position.altitude = 10;
+    positionGlobal.pose.position.latitude += 0.000005; // ~5m
+    positionGlobal.pose.position.longitude += 0;
     heading.data = 0;
     set_global_pos_pub.publish(positionGlobal);
     set_heading_pub.publish(heading);
     ROS_INFO("waypoint c2");
+    ros::spinOnce();
+    rate.sleep();
+
+    positionGlobal.pose.position.longitude += (360.0 / 40075000 / cos(positionGlobal.pose.position.latitude * 3.1415 / 360) * 5.0); // ~5m;
+    heading.data = 90;
+    set_global_pos_pub.publish(positionGlobal);
+    set_heading_pub.publish(heading);
+    ROS_INFO("waypoint c3");
+    ros::spinOnce();
+    rate.sleep();
+
+    positionGlobal.pose.position.latitude -= 0.000005; // ~5m
+    heading.data = 180;
+    set_global_pos_pub.publish(positionGlobal);
+    set_heading_pub.publish(heading);
+    ROS_INFO("waypoint c4");
+    ros::spinOnce();
+    rate.sleep();
+
+    positionGlobal.pose.position.longitude -= (360.0 / 40075000 / cos(positionGlobal.pose.position.latitude * 3.1415 / 360) * 5.0); // ~5m;
+    heading.data = 270;
+    set_global_pos_pub.publish(positionGlobal);
+    set_heading_pub.publish(heading);
+    ROS_INFO("waypoint c5");
     ros::spinOnce();
     rate.sleep();
 
