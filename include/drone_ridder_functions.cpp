@@ -8,6 +8,7 @@ geometry_msgs::PoseStamped waypoint_g;
 sensor_msgs::NavSatFix global_pose_g;
 mavros_msgs::HomePosition global_home_position;
 geographic_msgs::GeoPoseStamped waypoint_global;
+mavros_msgs::GlobalPositionTarget global_pos_raw_set_point;
 float current_heading_g;
 float local_offset_g;
 float correction_heading_g = 0;
@@ -18,6 +19,7 @@ bool activeWaypointLocal = true;
 
 ros::Publisher local_pos_pub;
 ros::Publisher global_pos_pub;
+//ros::Publisher global_pos_raw_pub;
 ros::Subscriber currentPos_sub;
 ros::Subscriber state_sub;
 ros::Subscriber global_pos_sub;
@@ -143,10 +145,14 @@ void set_heading(float heading){
     waypoint_global.pose.orientation.x = qx;
     waypoint_global.pose.orientation.y = qy;
     waypoint_global.pose.orientation.z = qz;
+
+    //global_pos_raw_set_point.yaw = heading;
+
     if(activeWaypointLocal){
         local_pos_pub.publish(waypoint_g);
     }else{
         global_pos_pub.publish(waypoint_global);
+        //global_pos_raw_pub.publish(global_pos_raw_set_point);
     }
 }
 // set position to fly to in the local frame
@@ -173,6 +179,14 @@ void set_global_destination(float latitude, float longitude, float altitude){
     waypoint_global.pose.position.altitude = altitude;
     waypoint_global.header.frame_id = "MAV_FRAME_GLOBAL_INT";
     global_pos_pub.publish(waypoint_global);
+/*
+    global_pos_raw_set_point.latitude = latitude;
+    global_pos_raw_set_point.longitude = longitude;
+    global_pos_raw_set_point.altitude = altitude;
+    global_pos_raw_set_point.coordinate_frame = uint8_t(5);
+    global_pos_raw_set_point.type_mask = uint16_t(0x101111111000);
+    //global_pos_raw_pub.publish(global_pos_raw_set_point);
+*/
 }
 /**
 \ingroup control_functions
@@ -434,8 +448,8 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
         ROS_INFO("using namespace %s", ros_namespace.c_str());
     }
     local_pos_pub = controlnode.advertise<geometry_msgs::PoseStamped>(ros_namespace + "/mavros/setpoint_position/local", 1);
-    //global_pos_pub = controlnode.advertise<mavros_msgs::GlobalPositionTarget>((ros_namespace + "/mavros/setpoint_position/global").c_str(), 10);
     global_pos_pub = controlnode.advertise<geographic_msgs::GeoPoseStamped>(ros_namespace + "/mavros/setpoint_position/global", 1);
+    //global_pos_raw_pub = controlnode.advertise<mavros_msgs::GlobalPositionTarget>(ros_namespace + "/mavros/setpoint_raw/global", 1);
     currentPos_sub = controlnode.subscribe<nav_msgs::Odometry>(ros_namespace + "/mavros/global_position/local", 1, pose_cb);
     state_sub = controlnode.subscribe<mavros_msgs::State>(ros_namespace + "/mavros/state", 1, state_cb);
     global_pos_sub = controlnode.subscribe<sensor_msgs::NavSatFix>(ros_namespace + "/mavros/global_position/global", 1, global_pos_cb);
