@@ -1,5 +1,6 @@
 #include <drone_ridder.h>
 
+
 mavros_msgs::State current_state_g;
 nav_msgs::Odometry current_pose_g;
 geometry_msgs::Pose correction_vector_g;

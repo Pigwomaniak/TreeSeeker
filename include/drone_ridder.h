@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include <mavros_msgs/CommandTOL.h>
 #include <mavros_msgs/CommandLong.h>
 #include <mavros_msgs/State.h>

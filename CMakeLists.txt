@@ -225,3 +225,6 @@ target_link_libraries(drone_ridder ${catkin_LIBRARIES})
 
 add_executable(test_DR_square src/test_DR_square.cpp)
 target_link_libraries(test_DR_square ${catkin_LIBRARIES})
+
+add_executable(object_position_interpreter src/object_position_interpreter.cpp include/object_position_interpreter_functions.cpp)
+target_link_libraries(object_position_interpreter ${catkin_LIBRARIES})
