@@ -1,0 +1,6 @@
+Header header
+geometry_msgs/Point localPosition
+float64 latitude
+float64 longitude
+float64 altitude
+float64 objectProbability

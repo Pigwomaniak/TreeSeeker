@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(tree_seeker)
+project(drone_ridder)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -49,8 +49,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   Message1.msg
-#   Message2.msg
+#         message1.msg
 # )
 
 ## Generate services in the 'srv' folder
@@ -103,10 +102,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES tree_seeker
-#  CATKIN_DEPENDS roscpp mavros std_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES tree_seeker
+  CATKIN_DEPENDS roscpp mavros std_msgs
+  #DEPENDS system_lib
 )
 
 ###########
@@ -226,5 +225,3 @@ target_link_libraries(drone_ridder ${catkin_LIBRARIES})
 add_executable(test_DR_square src/test_DR_square.cpp)
 target_link_libraries(test_DR_square ${catkin_LIBRARIES})
 
-add_executable(object_position_interpreter src/object_position_interpreter.cpp include/object_position_interpreter_functions.cpp)
-target_link_libraries(object_position_interpreter ${catkin_LIBRARIES})
