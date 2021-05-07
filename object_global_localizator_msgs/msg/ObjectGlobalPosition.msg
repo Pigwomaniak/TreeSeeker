@@ -1,6 +1,9 @@
 Header header
-geometry_msgs/Point localPosition
+string classObject
+uint16 idClassObject
+float64 probabilityObject
+geometry_msgs/Point globalPositionLocal
 float64 latitude
 float64 longitude
 float64 altitude
-float64 objectProbability
+float64 distanceDroneToObject

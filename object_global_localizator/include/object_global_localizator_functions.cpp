@@ -3,6 +3,11 @@
 sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
 std_msgs::Int8 objects_in_camera_view;
+ros::Publisher object_global_position_pub;
+darknet_ros_msgs::BoundingBoxes boundingBoxes;
+
+static Eigen::Matrix<double, 3, 3> cameraRotation;
+static Eigen::Matrix<double, 3, 3> droneRotation;
 
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
     global_position = *msg;
@@ -10,6 +15,13 @@ void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
 
 void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg){
     local_position = *msg;
+    double x = local_position.pose.pose.orientation.x;
+    double y = local_position.pose.pose.orientation.y;
+    double z = local_position.pose.pose.orientation.z;
+    double w = local_position.pose.pose.orientation.w;
+    droneRotation <<    (1 - 2*pow(y,2) - 2*pow(z,2)),  (2*x*y - 2*z*w),    (2*x*z + 2*y*w),
+                        (2*x*y + 2*z*w),    (1 - 2*pow(x,2) - 2*pow(z,2)),  (2*y*z - 2*x*w),
+                        (2*x*z - 2*y*w),    (2*y*z + 2*x*w),    (1 - 2*pow(x,2) - 2*pow(y,2));
 }
 
 void object_detector_cb(const std_msgs::Int8::ConstPtr& msg){
@@ -17,9 +29,53 @@ void object_detector_cb(const std_msgs::Int8::ConstPtr& msg){
 }
 
 void bounding_boxes_cb(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg){
-    darknet_ros_msgs::BoundingBoxes boundingBoxes = *msg;
-    for (int i = 0; i < boundingBoxes.bounding_boxes.size(); ++i) {
-        boundingBoxes.bounding_boxes[i].probability;
+    boundingBoxes = *msg;
+    localizeObjects();
+}
+
+void setup_camera_rotation(double pitch){
+    cameraRotation <<   1, 0, 0,
+                        0, cos(pitch), -sin(pitch),
+                        0, sin(pitch), cos(pitch);
+}
+
+void init_publisher(ros::NodeHandle controlNode){
+    object_global_position_pub = controlNode.advertise<object_global_localizator_msgs::ObjectsGlobalPositions>("/objec_global_localizator", 1);
+}
+
+void localizeObjects(){
+    object_global_localizator_msgs::ObjectsGlobalPositions outMessage;
+    for (auto & bounding_boxe : boundingBoxes.bounding_boxes) {
+        object_global_localizator_msgs::ObjectGlobalPosition objectGlobalPosition;
+        objectGlobalPosition.classObject = bounding_boxe.Class;
+        objectGlobalPosition.idClassObject = bounding_boxe.id;
+        objectGlobalPosition.probabilityObject = bounding_boxe.probability;
+        long xObjCamera = bounding_boxe.xmin + ((bounding_boxe.xmax - bounding_boxe.xmin) / 2) - CAMERA_X_CENTER;
+        long yObjCamera = bounding_boxe.ymin + ((bounding_boxe.ymax - bounding_boxe.ymin) / 2) - CAMERA_Y_CENTER;
+        long gamma = xObjCamera / long(CAMERA_X_MAX * CAMERA_X_ANGLE);
+        long beta = yObjCamera / long(CAMERA_Y_MAX * CAMERA_Y_ANGLE);
+        Eigen::Matrix<double, 3, 1> scalarToObjCenter_Camera;
+        double zScalarObj = sqrt(1 / (1 + pow(tan(gamma),2) * pow(cos(beta),2) + pow(tan(beta),2)));
+        double yScalarObj = tan(beta) * zScalarObj;
+        double xScalarObj = tan(gamma) * cos(beta) * zScalarObj;
+        scalarToObjCenter_Camera << xScalarObj, yScalarObj, zScalarObj;
+        Eigen::Matrix<double, 3, 1> scalarToObjCenter_Global;
+        scalarToObjCenter_Global = cameraRotation * droneRotation * scalarToObjCenter_Camera;
+        double scale = local_position.pose.pose.position.z / scalarToObjCenter_Global[2];
+        Eigen::Matrix<double, 3, 1> objectLocalPositionVector;
+        objectLocalPositionVector = scalarToObjCenter_Global * scale;
+        objectGlobalPosition.globalPositionLocal.x = objectLocalPositionVector[0] + local_position.pose.pose.position.x;
+        objectGlobalPosition.globalPositionLocal.y = objectLocalPositionVector[1] + local_position.pose.pose.position.y;
+        objectGlobalPosition.globalPositionLocal.z = 0;
+        objectGlobalPosition.distanceDroneToObject = sqrt(pow(objectLocalPositionVector[0], 2)
+                                                          + pow(objectLocalPositionVector[1], 2)
+                                                          + pow(objectLocalPositionVector[2], 2));
+        objectGlobalPosition.altitude = global_position.altitude - local_position.pose.pose.position.z;
+        objectGlobalPosition.longitude = global_position.longitude - (360.0 / 40075000 / cos(global_position.latitude * M_PI / 360) * objectLocalPositionVector[0]);
+        objectGlobalPosition.latitude = global_position.latitude + objectLocalPositionVector[1] * MERES_TO_LATITUDE;
+
+        outMessage.ObjectsGlobalPositions.push_back(objectGlobalPosition);
     }
+    object_global_position_pub.publish(outMessage);
 
 }
