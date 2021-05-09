@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   mavros
   roscpp
   std_msgs
+  darknet_ros_msgs
   object_global_localizator_msgs
 )
 

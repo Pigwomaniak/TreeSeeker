@@ -485,7 +485,7 @@ lib:FILEPATH=/opt/ros/noetic/lib/libtf2.so
 libmavconn_DIR:PATH=/home/maciek/catkin_ws/devel/share/libmavconn/cmake
 
 //The directory containing a CMake configuration file for mavros.
-mavros_DIR:PATH=/home/maciek/catkin_ws/devel/share/mavros/cmake
+mavros_DIR:PATH=mavros_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for mavros_msgs.
 mavros_msgs_DIR:PATH=/home/maciek/catkin_ws/devel/share/mavros_msgs/cmake
