@@ -1,1 +1,1 @@
-set(ORDERED_PATHS "/home/maciek/catkin_ws/devel/.private/mavros/lib;/home/maciek/catkin_ws/devel/.private/libmavconn/lib;/opt/ros/noetic/lib")
+set(ORDERED_PATHS "/opt/ros/noetic/lib")

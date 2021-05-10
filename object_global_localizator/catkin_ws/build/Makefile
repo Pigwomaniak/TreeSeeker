@@ -226,6 +226,19 @@ object_global_localizator_msgs_generate_messages_lisp/fast:
 .PHONY : object_global_localizator_msgs_generate_messages_lisp/fast
 
 #=============================================================================
+# Target rules for targets named object_global_localizator_msgs_generate_messages_cpp
+
+# Build rule for target.
+object_global_localizator_msgs_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 object_global_localizator_msgs_generate_messages_cpp
+.PHONY : object_global_localizator_msgs_generate_messages_cpp
+
+# fast build rule for target.
+object_global_localizator_msgs_generate_messages_cpp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build
+.PHONY : object_global_localizator_msgs_generate_messages_cpp/fast
+
+#=============================================================================
 # Target rules for targets named object_global_localizator_msgs_generate_messages_eus
 
 # Build rule for target.
@@ -239,17 +252,56 @@ object_global_localizator_msgs_generate_messages_eus/fast:
 .PHONY : object_global_localizator_msgs_generate_messages_eus/fast
 
 #=============================================================================
-# Target rules for targets named object_global_localizator_msgs_generate_messages_cpp
+# Target rules for targets named darknet_ros_msgs_generate_messages_py
 
 # Build rule for target.
-object_global_localizator_msgs_generate_messages_cpp: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 object_global_localizator_msgs_generate_messages_cpp
-.PHONY : object_global_localizator_msgs_generate_messages_cpp
+darknet_ros_msgs_generate_messages_py: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 darknet_ros_msgs_generate_messages_py
+.PHONY : darknet_ros_msgs_generate_messages_py
 
 # fast build rule for target.
-object_global_localizator_msgs_generate_messages_cpp/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build
-.PHONY : object_global_localizator_msgs_generate_messages_cpp/fast
+darknet_ros_msgs_generate_messages_py/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/build
+.PHONY : darknet_ros_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named darknet_ros_msgs_generate_messages_nodejs
+
+# Build rule for target.
+darknet_ros_msgs_generate_messages_nodejs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 darknet_ros_msgs_generate_messages_nodejs
+.PHONY : darknet_ros_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+darknet_ros_msgs_generate_messages_nodejs/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/build
+.PHONY : darknet_ros_msgs_generate_messages_nodejs/fast
+
+#=============================================================================
+# Target rules for targets named darknet_ros_msgs_generate_messages_lisp
+
+# Build rule for target.
+darknet_ros_msgs_generate_messages_lisp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 darknet_ros_msgs_generate_messages_lisp
+.PHONY : darknet_ros_msgs_generate_messages_lisp
+
+# fast build rule for target.
+darknet_ros_msgs_generate_messages_lisp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/build
+.PHONY : darknet_ros_msgs_generate_messages_lisp/fast
+
+#=============================================================================
+# Target rules for targets named darknet_ros_msgs_generate_messages_cpp
+
+# Build rule for target.
+darknet_ros_msgs_generate_messages_cpp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 darknet_ros_msgs_generate_messages_cpp
+.PHONY : darknet_ros_msgs_generate_messages_cpp
+
+# fast build rule for target.
+darknet_ros_msgs_generate_messages_cpp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/build
+.PHONY : darknet_ros_msgs_generate_messages_cpp/fast
 
 #=============================================================================
 # Target rules for targets named trajectory_msgs_generate_messages_py
@@ -718,6 +770,19 @@ doxygen: cmake_check_build_system
 doxygen/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/doxygen.dir/build.make CMakeFiles/doxygen.dir/build
 .PHONY : doxygen/fast
+
+#=============================================================================
+# Target rules for targets named darknet_ros_msgs_generate_messages_eus
+
+# Build rule for target.
+darknet_ros_msgs_generate_messages_eus: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 darknet_ros_msgs_generate_messages_eus
+.PHONY : darknet_ros_msgs_generate_messages_eus
+
+# fast build rule for target.
+darknet_ros_msgs_generate_messages_eus/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/build
+.PHONY : darknet_ros_msgs_generate_messages_eus/fast
 
 #=============================================================================
 # Target rules for targets named rosgraph_msgs_generate_messages_cpp
@@ -1383,6 +1448,11 @@ help:
 	@echo "... actionlib_msgs_generate_messages_nodejs"
 	@echo "... actionlib_msgs_generate_messages_py"
 	@echo "... clean_test_results"
+	@echo "... darknet_ros_msgs_generate_messages_cpp"
+	@echo "... darknet_ros_msgs_generate_messages_eus"
+	@echo "... darknet_ros_msgs_generate_messages_lisp"
+	@echo "... darknet_ros_msgs_generate_messages_nodejs"
+	@echo "... darknet_ros_msgs_generate_messages_py"
 	@echo "... diagnostic_msgs_generate_messages_cpp"
 	@echo "... diagnostic_msgs_generate_messages_eus"
 	@echo "... diagnostic_msgs_generate_messages_lisp"

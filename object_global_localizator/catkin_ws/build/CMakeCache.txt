@@ -399,6 +399,9 @@ class_loader_DIR:PATH=/opt/ros/noetic/share/class_loader/cmake
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/noetic/share/cpp_common/cmake
 
+//The directory containing a CMake configuration file for darknet_ros_msgs.
+darknet_ros_msgs_DIR:PATH=/home/maciek/catkin_ws/devel/share/darknet_ros_msgs/cmake
+
 //The directory containing a CMake configuration file for diagnostic_msgs.
 diagnostic_msgs_DIR:PATH=/opt/ros/noetic/share/diagnostic_msgs/cmake
 
@@ -482,13 +485,13 @@ gtest_main_LIB_DEPENDS:STATIC=general;gtest;
 lib:FILEPATH=/opt/ros/noetic/lib/libtf2.so
 
 //The directory containing a CMake configuration file for libmavconn.
-libmavconn_DIR:PATH=/home/maciek/catkin_ws/devel/share/libmavconn/cmake
+libmavconn_DIR:PATH=/opt/ros/noetic/share/libmavconn/cmake
 
 //The directory containing a CMake configuration file for mavros.
-mavros_DIR:PATH=mavros_DIR-NOTFOUND
+mavros_DIR:PATH=/opt/ros/noetic/share/mavros/cmake
 
 //The directory containing a CMake configuration file for mavros_msgs.
-mavros_msgs_DIR:PATH=/home/maciek/catkin_ws/devel/share/mavros_msgs/cmake
+mavros_msgs_DIR:PATH=/opt/ros/noetic/share/mavros_msgs/cmake
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/noetic/share/message_filters/cmake

@@ -5,7 +5,7 @@
 		<Option title="object_global_localizator"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\src\;CMake Files\..\..\..\..\..\..\usr\src\googletest\;CMake Files\..\..\..\..\..\..\usr\src\googletest\googlemock\;CMake Files\..\..\..\..\..\..\usr\src\googletest\googletest\;CMake Files\..\..\..\..\..\..\usr\src\googletest\googletest\cmake\;CMake Files\..\..\..\..\..\..\opt\;CMake Files\..\..\..\..\..\..\opt\ros\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\platform\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\test\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\tools\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\templates\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\em\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_runtime\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_runtime\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\cpp_common\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\cpp_common\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_serialization\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_serialization\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_traits\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_traits\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rostime\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rostime\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\std_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\std_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_updater\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_updater\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosconsole\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosconsole\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\xmlrpcpp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\xmlrpcpp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\eigen_conversions\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\eigen_conversions\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geometry_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geometry_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geographic_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geographic_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\uuid_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\uuid_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\sensor_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\sensor_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\nav_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\nav_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genmsg\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genmsg\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gencpp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gencpp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geneus\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geneus\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genlisp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genlisp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gennodejs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gennodejs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genpy\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genpy\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\pluginlib\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\pluginlib\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\class_loader\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\class_loader\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roslib\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roslib\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospack\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospack\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_ros\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_ros\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_filters\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_filters\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_generation\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_generation\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_py\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_py\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospy\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospy\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\trajectory_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\trajectory_msgs\cmake\;CMake Files\..\..\..\devel\;CMake Files\..\..\..\devel\share\;CMake Files\..\..\..\devel\share\mavros\;CMake Files\..\..\..\devel\share\mavros\cmake\;CMake Files\..\..\..\devel\share\libmavconn\;CMake Files\..\..\..\devel\share\libmavconn\cmake\;CMake Files\..\..\..\devel\share\mavros_msgs\;CMake Files\..\..\..\devel\share\mavros_msgs\cmake\;CMake Files\..\..\..\devel\share\object_global_localizator_msgs\;CMake Files\..\..\..\devel\share\object_global_localizator_msgs\cmake\;CMake Files\catkin_ws\;CMake Files\catkin_ws\build\;CMake Files\catkin_ws\build\catkin\;CMake Files\catkin_ws\build\catkin\catkin_generated\;CMake Files\catkin_ws\build\catkin\catkin_generated\version\;CMake Files\catkin_ws\build\catkin_generated\;CMake Files\catkin_ws\build\catkin_generated\installspace\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\usr\;CMake Files\..\..\..\..\..\..\usr\src\;CMake Files\..\..\..\..\..\..\usr\src\googletest\;CMake Files\..\..\..\..\..\..\usr\src\googletest\googlemock\;CMake Files\..\..\..\..\..\..\usr\src\googletest\googletest\;CMake Files\..\..\..\..\..\..\usr\src\googletest\googletest\cmake\;CMake Files\..\..\..\..\..\..\opt\;CMake Files\..\..\..\..\..\..\opt\ros\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\platform\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\test\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\tools\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\templates\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\em\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_runtime\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_runtime\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\cpp_common\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\cpp_common\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_serialization\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_serialization\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_traits\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp_traits\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rostime\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rostime\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\std_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\std_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_updater\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_updater\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roscpp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosconsole\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosconsole\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\xmlrpcpp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\xmlrpcpp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\eigen_conversions\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\eigen_conversions\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geometry_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geometry_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geographic_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geographic_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\uuid_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\uuid_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\libmavconn\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\libmavconn\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\sensor_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\sensor_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\nav_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\nav_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genmsg\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genmsg\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gencpp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gencpp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geneus\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\geneus\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genlisp\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genlisp\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gennodejs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\gennodejs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genpy\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\genpy\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\pluginlib\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\pluginlib\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\class_loader\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\class_loader\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roslib\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\roslib\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospack\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospack\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_ros\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_ros\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\actionlib\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_filters\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_filters\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rosgraph\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_msgs\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_generation\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\message_generation\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_py\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\tf2_py\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospy\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\rospy\cmake\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\trajectory_msgs\;CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\trajectory_msgs\cmake\;CMake Files\..\..\..\devel\;CMake Files\..\..\..\devel\share\;CMake Files\..\..\..\devel\share\darknet_ros_msgs\;CMake Files\..\..\..\devel\share\darknet_ros_msgs\cmake\;CMake Files\..\..\..\devel\share\object_global_localizator_msgs\;CMake Files\..\..\..\devel\share\object_global_localizator_msgs\cmake\;CMake Files\catkin_ws\;CMake Files\catkin_ws\build\;CMake Files\catkin_ws\build\catkin\;CMake Files\catkin_ws\build\catkin\catkin_generated\;CMake Files\catkin_ws\build\catkin\catkin_generated\version\;CMake Files\catkin_ws\build\catkin_generated\;CMake Files\catkin_ws\build\catkin_generated\installspace\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
@@ -67,6 +67,16 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="object_global_localizator_msgs_generate_messages_cpp">
+				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 object_global_localizator_msgs_generate_messages_cpp"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="object_global_localizator_msgs_generate_messages_eus">
 				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
 				<Option type="4"/>
@@ -77,11 +87,41 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="object_global_localizator_msgs_generate_messages_cpp">
+			<Target title="darknet_ros_msgs_generate_messages_py">
 				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 object_global_localizator_msgs_generate_messages_cpp"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 darknet_ros_msgs_generate_messages_py"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="darknet_ros_msgs_generate_messages_nodejs">
+				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 darknet_ros_msgs_generate_messages_nodejs"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="darknet_ros_msgs_generate_messages_lisp">
+				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 darknet_ros_msgs_generate_messages_lisp"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="darknet_ros_msgs_generate_messages_cpp">
+				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 darknet_ros_msgs_generate_messages_cpp"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
@@ -298,12 +338,8 @@
 					<Add option="-DROS_PACKAGE_NAME=&quot;object_global_localizator&quot;"/>
 					<Add option="-DROSCONSOLE_BACKEND_LOG4CXX"/>
 					<Add directory="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/include"/>
-					<Add directory="/home/maciek/catkin_ws/devel/include"/>
-					<Add directory="/home/maciek/catkin_ws/devel/.private/mavros_msgs/include"/>
+					<Add directory="/home/maciek/catkin_ws/devel/.private/darknet_ros_msgs/include"/>
 					<Add directory="/home/maciek/catkin_ws/devel/.private/object_global_localizator_msgs/include"/>
-					<Add directory="/home/maciek/catkin_ws/src/mavros/libmavconn/include"/>
-					<Add directory="/home/maciek/catkin_ws/src/mavros/mavros_msgs/include"/>
-					<Add directory="/home/maciek/catkin_ws/src/mavros/mavros/include"/>
 					<Add directory="/opt/ros/noetic/include"/>
 					<Add directory="/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"/>
 					<Add directory="/usr/include/eigen3"/>
@@ -333,12 +369,8 @@
 					<Add option="-DROS_PACKAGE_NAME=&quot;object_global_localizator&quot;"/>
 					<Add option="-DROSCONSOLE_BACKEND_LOG4CXX"/>
 					<Add directory="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/include"/>
-					<Add directory="/home/maciek/catkin_ws/devel/include"/>
-					<Add directory="/home/maciek/catkin_ws/devel/.private/mavros_msgs/include"/>
+					<Add directory="/home/maciek/catkin_ws/devel/.private/darknet_ros_msgs/include"/>
 					<Add directory="/home/maciek/catkin_ws/devel/.private/object_global_localizator_msgs/include"/>
-					<Add directory="/home/maciek/catkin_ws/src/mavros/libmavconn/include"/>
-					<Add directory="/home/maciek/catkin_ws/src/mavros/mavros_msgs/include"/>
-					<Add directory="/home/maciek/catkin_ws/src/mavros/mavros/include"/>
 					<Add directory="/opt/ros/noetic/include"/>
 					<Add directory="/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"/>
 					<Add directory="/usr/include/eigen3"/>
@@ -522,6 +554,16 @@
 				<Option type="4"/>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 doxygen"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="darknet_ros_msgs_generate_messages_eus">
+				<Option working_dir="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 darknet_ros_msgs_generate_messages_eus"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/Makefile&quot;  VERBOSE=1 clean"/>
@@ -1380,6 +1422,12 @@
 		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/catkin/cmake/em/pkg.pc.em">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\catkin\cmake\em\"/>
 		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/mavros/cmake/mavrosConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/mavros/cmake/mavrosConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros\cmake\"/>
+		</Unit>
 		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/diagnostic_msgs/cmake/diagnostic_msgs-msg-extras.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\diagnostic_msgs\cmake\"/>
 		</Unit>
@@ -1502,6 +1550,24 @@
 		</Unit>
 		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/uuid_msgs/cmake/uuid_msgsConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\uuid_msgs\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/libmavconn/cmake/libmavconn-extras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\libmavconn\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/libmavconn/cmake/libmavconnConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\libmavconn\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/libmavconn/cmake/libmavconnConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\libmavconn\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/mavros_msgs/cmake/mavros_msgs-msg-extras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros_msgs\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/mavros_msgs/cmake/mavros_msgsConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros_msgs\cmake\"/>
+		</Unit>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/mavros_msgs/cmake/mavros_msgsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\mavros_msgs\cmake\"/>
 		</Unit>
 		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/sensor_msgs/cmake/sensor_msgs-msg-extras.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\sensor_msgs\cmake\"/>
@@ -1686,29 +1752,14 @@
 		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../../../../opt/ros/noetic/share/trajectory_msgs/cmake/trajectory_msgsConfig.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\..\opt\ros\noetic\share\trajectory_msgs\cmake\"/>
 		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/mavros/cmake/mavrosConfig-version.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\mavros\cmake\"/>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/darknet_ros_msgs/cmake/darknet_ros_msgs-msg-extras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\devel\share\darknet_ros_msgs\cmake\"/>
 		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/mavros/cmake/mavrosConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\mavros\cmake\"/>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/darknet_ros_msgs/cmake/darknet_ros_msgsConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\devel\share\darknet_ros_msgs\cmake\"/>
 		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/libmavconn/cmake/libmavconn-extras.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\libmavconn\cmake\"/>
-		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/libmavconn/cmake/libmavconnConfig-version.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\libmavconn\cmake\"/>
-		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/libmavconn/cmake/libmavconnConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\libmavconn\cmake\"/>
-		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/mavros_msgs/cmake/mavros_msgs-msg-extras.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\mavros_msgs\cmake\"/>
-		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/mavros_msgs/cmake/mavros_msgsConfig-version.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\mavros_msgs\cmake\"/>
-		</Unit>
-		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/mavros_msgs/cmake/mavros_msgsConfig.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\devel\share\mavros_msgs\cmake\"/>
+		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/darknet_ros_msgs/cmake/darknet_ros_msgsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\devel\share\darknet_ros_msgs\cmake\"/>
 		</Unit>
 		<Unit filename="/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/../../../devel/share/object_global_localizator_msgs/cmake/object_global_localizator_msgs-msg-extras.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\devel\share\object_global_localizator_msgs\cmake\"/>

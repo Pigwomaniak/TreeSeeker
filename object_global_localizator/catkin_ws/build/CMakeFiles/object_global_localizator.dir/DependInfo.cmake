@@ -19,12 +19,8 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../../include"
-  "/home/maciek/catkin_ws/devel/include"
-  "/home/maciek/catkin_ws/devel/.private/mavros_msgs/include"
+  "/home/maciek/catkin_ws/devel/.private/darknet_ros_msgs/include"
   "/home/maciek/catkin_ws/devel/.private/object_global_localizator_msgs/include"
-  "/home/maciek/catkin_ws/src/mavros/libmavconn/include"
-  "/home/maciek/catkin_ws/src/mavros/mavros_msgs/include"
-  "/home/maciek/catkin_ws/src/mavros/mavros/include"
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/eigen3"

@@ -86,8 +86,12 @@ preinstall: gtest/preinstall
 clean: CMakeFiles/object_global_localizator_msgs_generate_messages_py.dir/clean
 clean: CMakeFiles/object_global_localizator_msgs_generate_messages_nodejs.dir/clean
 clean: CMakeFiles/object_global_localizator_msgs_generate_messages_lisp.dir/clean
-clean: CMakeFiles/object_global_localizator_msgs_generate_messages_eus.dir/clean
 clean: CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean
+clean: CMakeFiles/object_global_localizator_msgs_generate_messages_eus.dir/clean
+clean: CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/clean
+clean: CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/clean
+clean: CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/clean
+clean: CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/clean
 clean: CMakeFiles/trajectory_msgs_generate_messages_py.dir/clean
 clean: CMakeFiles/trajectory_msgs_generate_messages_nodejs.dir/clean
 clean: CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/clean
@@ -124,6 +128,7 @@ clean: CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean
 clean: CMakeFiles/std_msgs_generate_messages_cpp.dir/clean
 clean: CMakeFiles/run_tests.dir/clean
 clean: CMakeFiles/doxygen.dir/clean
+clean: CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/clean
 clean: CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/clean
 clean: CMakeFiles/diagnostic_msgs_generate_messages_eus.dir/clean
 clean: CMakeFiles/std_msgs_generate_messages_lisp.dir/clean
@@ -308,6 +313,33 @@ CMakeFiles/object_global_localizator_msgs_generate_messages_lisp.dir/clean:
 .PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_lisp.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir
+
+# All Build rule for target.
+CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target object_global_localizator_msgs_generate_messages_cpp"
+.PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+.PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+object_global_localizator_msgs_generate_messages_cpp: CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/rule
+
+.PHONY : object_global_localizator_msgs_generate_messages_cpp
+
+# clean rule for target.
+CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean
+.PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/object_global_localizator_msgs_generate_messages_eus.dir
 
 # All Build rule for target.
@@ -335,31 +367,112 @@ CMakeFiles/object_global_localizator_msgs_generate_messages_eus.dir/clean:
 .PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_eus.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir
+# Target rules for target CMakeFiles/darknet_ros_msgs_generate_messages_py.dir
 
 # All Build rule for target.
-CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target object_global_localizator_msgs_generate_messages_cpp"
-.PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/all
+CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target darknet_ros_msgs_generate_messages_py"
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/rule: cmake_check_build_system
+CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
-.PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/rule
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
-object_global_localizator_msgs_generate_messages_cpp: CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/rule
+darknet_ros_msgs_generate_messages_py: CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/rule
 
-.PHONY : object_global_localizator_msgs_generate_messages_cpp
+.PHONY : darknet_ros_msgs_generate_messages_py
 
 # clean rule for target.
-CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/build.make CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean
-.PHONY : CMakeFiles/object_global_localizator_msgs_generate_messages_cpp.dir/clean
+CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/clean
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_py.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir
+
+# All Build rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target darknet_ros_msgs_generate_messages_nodejs"
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+darknet_ros_msgs_generate_messages_nodejs: CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/rule
+
+.PHONY : darknet_ros_msgs_generate_messages_nodejs
+
+# clean rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/clean
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_nodejs.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir
+
+# All Build rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target darknet_ros_msgs_generate_messages_lisp"
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+darknet_ros_msgs_generate_messages_lisp: CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/rule
+
+.PHONY : darknet_ros_msgs_generate_messages_lisp
+
+# clean rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/clean
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_lisp.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir
+
+# All Build rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target darknet_ros_msgs_generate_messages_cpp"
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+darknet_ros_msgs_generate_messages_cpp: CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/rule
+
+.PHONY : darknet_ros_msgs_generate_messages_cpp
+
+# clean rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/clean
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_cpp.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/trajectory_msgs_generate_messages_py.dir
@@ -1332,6 +1445,33 @@ doxygen: CMakeFiles/doxygen.dir/rule
 CMakeFiles/doxygen.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/doxygen.dir/build.make CMakeFiles/doxygen.dir/clean
 .PHONY : CMakeFiles/doxygen.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir
+
+# All Build rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles --progress-num= "Built target darknet_ros_msgs_generate_messages_eus"
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/CMakeFiles 0
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+darknet_ros_msgs_generate_messages_eus: CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/rule
+
+.PHONY : darknet_ros_msgs_generate_messages_eus
+
+# clean rule for target.
+CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/build.make CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/clean
+.PHONY : CMakeFiles/darknet_ros_msgs_generate_messages_eus.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir
