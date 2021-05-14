@@ -18,14 +18,17 @@
 #define CAMERA_Y_ANGLE 0.755727
 #define CAMERA_X_CENTER 960
 #define CAMERA_Y_CENTER 540
-#define MERES_TO_LATITUDE 0.008997742
+#define MERES_TO_LATITUDE 0.000008983031
 
 
 
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg);
 void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg);
-void object_detector_cb(const std_msgs::Int8::ConstPtr& msg);
+//void object_detector_cb(const std_msgs::Int8::ConstPtr& msg);
 void bounding_boxes_cb(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg);
 void setup_camera_rotation(double pitch);
 void init_publisher(ros::NodeHandle controlNode);
 void localizeObjects();
+void resetFlags();
+bool checkFlags();
+void setDroneRotationMatrix();
