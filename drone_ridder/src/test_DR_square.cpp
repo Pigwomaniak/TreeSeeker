@@ -23,7 +23,7 @@ void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg){
 }
 
 int main(int argc, char** argv){
-    ros::init(argc, argv, "test_DR_square");
+    ros::init(argc, argv, "test_DR");
     ros::NodeHandle test_DR_square("~");
     std::string rosNamespace = test_DR_square.getNamespace();
     ros::Publisher set_local_pos_pub = test_DR_square.advertise<geometry_msgs::Point>("/drone_ridder/set_local_position", 1);
@@ -42,17 +42,14 @@ int main(int argc, char** argv){
     geometry_msgs::Point positionOffset;
     std_msgs::String flightMode;
     geographic_msgs::GeoPoseStamped positionGlobal;
-    float timeToSleep = 4;
+    float timeToSleep = 6;
 
     ROS_INFO("Get ready");
     //ROS_INFO("Test of set_mode");
     //flightMode.data = "takeoff"
-    while (local_position.pose.pose.position.z < 5){
-        ros::spinOnce();
-        rate.sleep();
-    }
+
     ros::spinOnce();
-    rate.sleep();
+    ros::Duration(timeToSleep).sleep();
     ros::spinOnce();
     ros::spinOnce();
     ros::spinOnce();

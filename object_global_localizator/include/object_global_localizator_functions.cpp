@@ -34,9 +34,17 @@ void bounding_boxes_cb(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg){
 }
 
 void setup_camera_rotation(double pitch){
-    cameraRotation <<   1, 0, 0,
-                        0, cos(pitch), -sin(pitch),
-                        0, sin(pitch), cos(pitch);
+    Eigen::Matrix<double, 3, 3> rotation_Z;
+    Eigen::Matrix<double, 3 ,3> rotation_Y;
+    rotation_Y  <<   cos(pitch), 0, sin(pitch),
+                    0, 1, 0,
+                    -sin(pitch), 0, cos(pitch);
+    double zRotation = -M_PI/2;
+    rotation_Z <<   cos(zRotation), -sin(zRotation), 0,
+                    sin(zRotation), cos(zRotation), 0,
+                    0,          0,          1;
+
+    cameraRotation = rotation_Y * rotation_Z;
 }
 
 void init_publisher(ros::NodeHandle controlNode){

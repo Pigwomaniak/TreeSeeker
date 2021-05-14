@@ -225,3 +225,17 @@ target_link_libraries(drone_ridder ${catkin_LIBRARIES})
 add_executable(test_DR_square src/test_DR_square.cpp)
 target_link_libraries(test_DR_square ${catkin_LIBRARIES})
 
+add_executable(test_set_global_position_square src/test_set_global_position_square.cpp)
+target_link_libraries(test_set_global_position_square ${catkin_LIBRARIES})
+
+add_executable(test_set_global_position_still src/test_set_global_position_still.cpp)
+target_link_libraries(test_set_global_position_still ${catkin_LIBRARIES})
+
+add_executable(test_set_local_position src/test_set_local_position.cpp)
+target_link_libraries(test_set_local_position ${catkin_LIBRARIES})
+
+add_executable(test_set_position_offset src/test_set_position_offset.cpp)
+target_link_libraries(test_set_position_offset ${catkin_LIBRARIES})
+
+add_executable(test_set_heading src/test_set_heading.cpp)
+target_link_libraries(test_set_heading ${catkin_LIBRARIES})
