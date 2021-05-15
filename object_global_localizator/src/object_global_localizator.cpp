@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
     //ros::spin();
     ros::Rate rate(2.0);
-    ROS_INFO("While Started");
+    ROS_INFO("Localization Started");
 
     while(ros::ok())
     {
@@ -26,13 +26,13 @@ int main(int argc, char** argv) {
 
     	if(checkFlags())
     	{
-    		ROS_INFO("Condition passed");
+    		//ROS_INFO("Condition passed");
     		setDroneRotationMatrix();
     		localizeObjects();
     	}
     	else
     	{
-    		ROS_INFO("%d",errorCounter);
+    		//ROS_INFO("%d",errorCounter);
     		errorCounter++;
     	}
 

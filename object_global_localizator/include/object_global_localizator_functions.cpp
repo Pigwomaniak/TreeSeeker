@@ -16,13 +16,13 @@ static Eigen::Matrix<double, 3, 3> droneRotation;
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
     global_position = *msg;
     globalPosGlobalFlag = true;
-    ROS_INFO("global pos read");
+    //ROS_INFO("global pos read");
 }
 
 void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg){
     local_position = *msg;
     globalPosLocalFlag = true;
-    ROS_INFO("local pos read");
+    //ROS_INFO("local pos read");
 }
 
 /*void object_detector_cb(const std_msgs::Int8::ConstPtr& msg){
@@ -32,21 +32,22 @@ void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg){
 void bounding_boxes_cb(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg){
     boundingBoxes = *msg;
     boundingBoxesFlag = true;
-    ROS_INFO("boundingBoxes read");
+    //ROS_INFO("boundingBoxes read");
 }
 
 void setup_camera_rotation(double pitch){
     Eigen::Matrix<double, 3, 3> rotation_Z;
     Eigen::Matrix<double, 3 ,3> rotation_Y;
-    rotation_Y  <<   cos(pitch), 0, sin(pitch),
-                    0, 1, 0,
-                    -sin(pitch), 0, cos(pitch);
-    double zRotation = -M_PI/2;
-    rotation_Z <<   cos(zRotation), -sin(zRotation), 0,
-                    sin(zRotation), cos(zRotation), 0,
-                    0,          0,          1;
+    rotation_Y  <<      cos(pitch),     0,  sin(pitch),
+                        0,              1,  0,
+                        -sin(pitch),    0,  cos(pitch);
+    double zRotation = M_PI/2;
+    rotation_Z <<   cos(zRotation),     -sin(zRotation),    0,
+                    sin(zRotation),     cos(zRotation),     0,
+                    0,                  0,                  1;
 
     cameraRotation = rotation_Y * rotation_Z;
+    //cameraRotation = cameraRotation.transpose();
 }
 
 void init_publisher(ros::NodeHandle controlNode){
@@ -60,8 +61,8 @@ void localizeObjects(){
         objectGlobalPosition.classObject = bounding_boxe.Class;
         objectGlobalPosition.idClassObject = bounding_boxe.id;
         objectGlobalPosition.probabilityObject = bounding_boxe.probability;
-        double xObjCamera = bounding_boxe.xmin + ((bounding_boxe.xmax - bounding_boxe.xmin) / 2) - CAMERA_X_CENTER;
-        double yObjCamera = bounding_boxe.ymin + ((bounding_boxe.ymax - bounding_boxe.ymin) / 2) - CAMERA_Y_CENTER;
+        double xObjCamera = -double(double(bounding_boxe.xmin) + (double(bounding_boxe.xmax - bounding_boxe.xmin) / 2) - CAMERA_X_CENTER);
+        double yObjCamera = -(double(bounding_boxe.ymin) + (double(bounding_boxe.ymax - bounding_boxe.ymin) / 2) - CAMERA_Y_CENTER);
         double gamma = (xObjCamera / CAMERA_X_MAX) * CAMERA_X_ANGLE;
         double beta = (yObjCamera / CAMERA_Y_MAX) * CAMERA_Y_ANGLE;
         Eigen::Matrix<double, 3, 1> scalarToObjCenter_Camera;
@@ -70,8 +71,8 @@ void localizeObjects(){
         double xScalarObj = tan(gamma) * cos(beta) * zScalarObj;
         scalarToObjCenter_Camera << xScalarObj, yScalarObj, zScalarObj;
         Eigen::Matrix<double, 3, 1> scalarToObjCenter_Global;
-        scalarToObjCenter_Global = droneRotation * (cameraRotation * scalarToObjCenter_Camera);
-        double scale = local_position.pose.pose.position.z / scalarToObjCenter_Global[2];
+        scalarToObjCenter_Global = droneRotation * cameraRotation * scalarToObjCenter_Camera;
+        double scale = abs(local_position.pose.pose.position.z / scalarToObjCenter_Global[2]);
         Eigen::Matrix<double, 3, 1> objectLocalPositionVector;
         objectLocalPositionVector = scalarToObjCenter_Global * scale;
         objectGlobalPosition.globalPositionLocal.x = objectLocalPositionVector[0] + local_position.pose.pose.position.x;
