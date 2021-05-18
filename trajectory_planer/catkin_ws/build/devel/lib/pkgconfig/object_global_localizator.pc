@@ -1,0 +1,8 @@
+prefix=/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/catkin_ws/build/devel
+
+Name: object_global_localizator
+Description: Description of object_global_localizator
+Version: 0.0.0
+Cflags: -I/home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/include
+Libs: -L${prefix}/lib 
+Requires: 

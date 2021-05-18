@@ -1,0 +1,1 @@
+CMakeLists.txt not found in /home/maciek/catkin_ws/src/tree_seeker/object_global_localizator/object_global_localizator Select CMakeLists.txt

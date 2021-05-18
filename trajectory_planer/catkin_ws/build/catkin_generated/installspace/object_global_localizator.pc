@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: object_global_localizator
+Description: Description of object_global_localizator
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 
