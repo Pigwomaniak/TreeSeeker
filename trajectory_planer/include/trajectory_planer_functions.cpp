@@ -1,5 +1,6 @@
 #include <trajectory_planer_functions.h>
-#include <vector>
+
+#include <algorithm>
 
 
 #define MODE 0
@@ -9,20 +10,21 @@ object_global_localizator_msgs::ObjectsGlobalPositions objGlobPos;
 bool readFlag;
 
 std::vector<TreeObejctPosition> treePosVec;
+bool trajectoryRecalculateFlag;
+Point droneOldPos(0,0);
+size_t goalPointId;
+bool goolFlag;
 
-/*
+
 sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
-ros::Publisher object_global_position_pub;
-darknet_ros_msgs::BoundingBoxes boundingBoxes;
 
-bool globalPosGlobalFlag;
-bool globalPosLocalFlag;
-bool boundingBoxesFlag;
 
-static Eigen::Matrix<double, 3, 3> cameraRotation;
-static Eigen::Matrix<double, 3, 3> droneRotation;
-*/
+ros::Publisher goal_pos_pub;
+
+trajectory_planer_msgs::TrajectoryPlaner achievePos;
+bool readAchievePos;
+
 
 
 void new_Point_cb(const object_global_localizator_msgs::ObjectsGlobalPositions::ConstPtr& msg){
@@ -31,9 +33,32 @@ void new_Point_cb(const object_global_localizator_msgs::ObjectsGlobalPositions::
     //ROS_INFO("global pos read");
 }
 
+void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
+    global_position = *msg;
+    //ROS_INFO("global pos read");
+}
+
+void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg){
+    local_position = *msg;
+    //ROS_INFO("local pos read");
+}
+
+void achieve_point_cb(const trajectory_planer_msgs::TrajectoryPlaner::ConstPtr& msg){
+    achievePos = *msg;
+    readAchievePos = true;
+    //ROS_INFO("local pos read");
+}
+
 void resetReadFlag()
 {
     readFlag = false;
+    readAchievePos = false;
+    
+}
+
+void resetGoolFlag()
+{
+    goolFlag = false;
 }
 
 bool checkReadFlag()
@@ -78,107 +103,169 @@ void processReadPoints()
 
             TreeObejctPosition top (id,p,radius);
             treePosVec.push_back(top);
-            ROS_INFO("new id: %d p1: %f p2: %f",id,p.getPos1(),p.getPos2());
+            trajectoryRecalculateFlag = true;
+            //ROS_INFO("new id: %d p1: %f p2: %f",id,p.getPos1(),p.getPos2());
         }
 
     }
 }
 
-/*void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
-    global_position = *msg;
-    globalPosGlobalFlag = true;
-    //ROS_INFO("global pos read");
-}
+void findTrajectory(unsigned short id)
+{
 
-void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg){
-    local_position = *msg;
-    globalPosLocalFlag = true;
-    //ROS_INFO("local pos read");
-}
+#if MODE == 0
+    Point dronePos(local_position.pose.pose.position.x,local_position.pose.pose.position.y);
+#else
+    Point dronePos(global_position.latitude,global_position.longitude);
+#endif
 
-
-void bounding_boxes_cb(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg){
-    boundingBoxes = *msg;
-    boundingBoxesFlag = true;
-    //ROS_INFO("boundingBoxes read");
-}
-
-void setup_camera_rotation(double pitch){
-    Eigen::Matrix<double, 3, 3> rotation_Z;
-    Eigen::Matrix<double, 3 ,3> rotation_Y;
-    rotation_Y  <<      cos(pitch),     0,  sin(pitch),
-                        0,              1,  0,
-                        -sin(pitch),    0,  cos(pitch);
-    double zRotation = M_PI/2;
-    rotation_Z <<   cos(zRotation),     -sin(zRotation),    0,
-                    sin(zRotation),     cos(zRotation),     0,
-                    0,                  0,                  1;
-
-    cameraRotation = rotation_Y * rotation_Z;
-    //cameraRotation = cameraRotation.transpose();
-}*/
-
-//void init_publisher(ros::NodeHandle controlNode){
-//    object_global_position_pub = controlNode.advertise<object_global_localizator_msgs::ObjectsGlobalPositions>("/objec_global_localizator", 1);
-//}
-
-/*
-void localizeObjects(){
-    object_global_localizator_msgs::ObjectsGlobalPositions outMessage;
-    for (const auto & bounding_boxe : boundingBoxes.bounding_boxes) {
-        object_global_localizator_msgs::ObjectGlobalPosition objectGlobalPosition;
-        objectGlobalPosition.classObject = bounding_boxe.Class;
-        objectGlobalPosition.idClassObject = bounding_boxe.id;
-        objectGlobalPosition.probabilityObject = bounding_boxe.probability;
-        double xObjCamera = -double(double(bounding_boxe.xmin) + (double(bounding_boxe.xmax - bounding_boxe.xmin) / 2) - CAMERA_X_CENTER);
-        double yObjCamera = -(double(bounding_boxe.ymin) + (double(bounding_boxe.ymax - bounding_boxe.ymin) / 2) - CAMERA_Y_CENTER);
-        double gamma = (xObjCamera / CAMERA_X_MAX) * CAMERA_X_ANGLE;
-        double beta = (yObjCamera / CAMERA_Y_MAX) * CAMERA_Y_ANGLE;
-        Eigen::Matrix<double, 3, 1> scalarToObjCenter_Camera;
-        double zScalarObj = sqrt(1 / (1 + pow(tan(gamma),2) * pow(cos(beta),2) + pow(tan(beta),2)));
-        double yScalarObj = tan(beta) * zScalarObj;
-        double xScalarObj = tan(gamma) * cos(beta) * zScalarObj;
-        scalarToObjCenter_Camera << xScalarObj, yScalarObj, zScalarObj;
-        Eigen::Matrix<double, 3, 1> scalarToObjCenter_Global;
-        scalarToObjCenter_Global = droneRotation * cameraRotation * scalarToObjCenter_Camera;
-        double scale = abs(local_position.pose.pose.position.z / scalarToObjCenter_Global[2]);
-        Eigen::Matrix<double, 3, 1> objectLocalPositionVector;
-        objectLocalPositionVector = scalarToObjCenter_Global * scale;
-        objectGlobalPosition.globalPositionLocal.x = objectLocalPositionVector[0] + local_position.pose.pose.position.x;
-        objectGlobalPosition.globalPositionLocal.y = objectLocalPositionVector[1] + local_position.pose.pose.position.y;
-        objectGlobalPosition.globalPositionLocal.z = 0;
-        objectGlobalPosition.distanceDroneToObject = sqrt(pow(objectLocalPositionVector[0], 2)
-                                                          + pow(objectLocalPositionVector[1], 2)
-                                                          + pow(objectLocalPositionVector[2], 2));
-        objectGlobalPosition.altitude = global_position.altitude - local_position.pose.pose.position.z;
-        objectGlobalPosition.longitude = global_position.longitude + (360.0 / 40075000 / cos(global_position.latitude * M_PI / 360) * objectLocalPositionVector[0]);
-        objectGlobalPosition.latitude = global_position.latitude + objectLocalPositionVector[1] * MERES_TO_LATITUDE;
-
-        outMessage.ObjectsGlobalPositions.push_back(objectGlobalPosition);
+    if(dronePos.countDistance(droneOldPos)>= pow(treePosVec[0].getRadius(),2))
+    {
+        droneOldPos = dronePos;
+        trajectoryRecalculateFlag = true;
     }
-    object_global_position_pub.publish(outMessage);
+
+
+
+    if(trajectoryRecalculateFlag)
+    {
+        trajectoryRecalculateFlag = false;
+        std::vector<Point> points;
+
+        for(const auto& treePos:treePosVec)
+        {
+            if(treePos.getId()==id && !treePos.isVisited())
+            {
+                points.push_back(treePos.getPoint());
+            }
+        }
+
+        if (points.size()==0) return;
+
+        std::vector<size_t> trajectory = findBestTrajectory(points,dronePos);
+
+        Point goalPoint = points[trajectory[0]];
+        for(size_t i = 0; i < treePosVec.size(); i++)
+        {
+            if(goalPoint.countDistance(treePosVec[i].getPoint())<= pow(treePosVec[0].getRadius(),2))
+            {
+                goalPointId = i;
+                break;
+            }
+        }
+        
+        goolFlag = true;
+
+    }
+
 
 }
 
-void resetFlags()
+std::vector<size_t> findBestTrajectory(const std::vector<Point>& points, const Point& dronePos)
 {
-    globalPosGlobalFlag = false;
-    globalPosLocalFlag = false;
-    boundingBoxesFlag = false;
+
+    std::vector<size_t> result;
+    double minCost = 1e300;
+
+    for(size_t i = 0; i < points.size(); i++)
+    {
+        Point next = points[i];
+        std::vector<size_t> v = {i};
+
+        double cost = next.countDistance(dronePos);
+
+        findLoverCost(points,v,cost,minCost,result);
+    }
+
+    return result;
+
 }
 
-bool checkFlags()
+void findLoverCost (const std::vector<Point>& points, std::vector<size_t>& v, double actualCost, double& minCost, std::vector<size_t>& result)
 {
-    return globalPosGlobalFlag && globalPosLocalFlag && boundingBoxesFlag;
+    if(v.size() == points.size())
+    {
+        if(actualCost<minCost)
+        {
+            result = v;
+            minCost = actualCost;
+        }
+    }
+    else
+    {
+        for(size_t i = 0; i < points.size(); i++)
+        {
+            if(std::find(v.begin(), v.end(), i) == v.end())
+            {
+                Point last = points[*(v.end()-1)];
+                Point next = points[i];
+
+                actualCost += next.countDistance(last);
+                v.push_back(i);
+
+                findLoverCost(points,v,actualCost,minCost,result);
+
+            } 
+        }
+    }
 }
 
-void setDroneRotationMatrix()
+void init_publisher(ros::NodeHandle controlNode){
+    goal_pos_pub = controlNode.advertise<trajectory_planer_msgs::TrajectoryPlaner>("/trajectory_planer", 1);
+}
+
+void sendOutMessage()
 {
-    double x = local_position.pose.pose.orientation.x;
-    double y = local_position.pose.pose.orientation.y;
-    double z = local_position.pose.pose.orientation.z;
-    double w = local_position.pose.pose.orientation.w;
-    droneRotation <<    (1 - 2*pow(y,2) - 2*pow(z,2)),  (2*x*y - 2*z*w),    (2*x*z + 2*y*w),
-                        (2*x*y + 2*z*w),    (1 - 2*pow(x,2) - 2*pow(z,2)),  (2*y*z - 2*x*w),
-                        (2*x*z - 2*y*w),    (2*y*z + 2*x*w),    (1 - 2*pow(x,2) - 2*pow(y,2));
-}*/
+    if(goolFlag)
+    {
+        trajectory_planer_msgs::TrajectoryPlaner outMessage;
+
+#if MODE == 0
+        outMessage.mode = "local";
+#else
+        outMessage.mode = "global";
+#endif
+
+        Point p = treePosVec[goalPointId].getPoint();
+        outMessage.pos1 = p.getPos1();
+        outMessage.pos2 = p.getPos2();
+
+        //ROS_INFO("Goal p1: %f p2: %f", p.getPos1(), p.getPos2());
+
+        goal_pos_pub.publish(outMessage);
+    }
+}
+
+void printInfo()
+{
+    if(goolFlag)
+    {
+        ROS_INFO("Actual Points");
+        for(const auto& treePos:treePosVec)
+        {
+                Point p = treePos.getPoint();
+                ROS_INFO("ID %d Goal p1: %f p2: %f",treePos.getId(), p.getPos1(), p.getPos2());
+        }
+        ROS_INFO("Goal has idnex %d",goalPointId);
+        Point p = treePosVec[goalPointId].getPoint();
+        ROS_INFO("Goal p1: %f p2: %f", p.getPos1(), p.getPos2());
+    }
+}
+
+
+void setVisitedPoit()
+{
+    if(readAchievePos)
+    {
+        readAchievePos=false;
+        Point p (achievePos.pos1, achievePos.pos2);
+
+        for(auto& treePos:treePosVec)
+        {
+            if(p.countDistance(treePos.getPoint())<= pow(treePosVec[0].getRadius(),2))
+            {
+                treePos.setVisited();
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 #include <TreeObejctPosition.h>
 
-TreeObejctPosition::TreeObejctPosition(unsigned short id, Point sum, double radius) : id(id),sum(sum), num(1), radius(radius)
+TreeObejctPosition::TreeObejctPosition(unsigned short id, Point sum, double radius) : id(id),sum(sum), num(1), radius(radius), visited(0)
 {}
 
 bool TreeObejctPosition::addIfInclude (const Point& p, unsigned short idp)
