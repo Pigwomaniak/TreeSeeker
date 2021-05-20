@@ -71,6 +71,7 @@ void processReadPoints()
     for (const auto & pointObj : objGlobPos.ObjectsGlobalPositions) 
     {
         unsigned short id = pointObj.idClassObject;
+        double distance = pointObj.distanceDroneToObject;
 
 #if MODE == 0
         Point p (pointObj.globalPositionLocal.x, pointObj.globalPositionLocal.y);
@@ -84,7 +85,7 @@ void processReadPoints()
             //ROS_INFO("id: %d v id: %d",id,treePos.getId());
             //ROS_INFO("x: %f v x: %f",p.getPos1(),treePos.getPoint().getPos1());
             //ROS_INFO("y: %f v y: %f",p.getPos2(),treePos.getPoint().getPos2());
-            if(treePos.addIfInclude(p,id))
+            if(treePos.addIfInclude(p,id,1.0/distance))
             {
                 //ROS_INFO("add id: %d p1: %f p2: %f",id,p.getPos1(),p.getPos2());
                 succes = true;
@@ -101,10 +102,13 @@ void processReadPoints()
         double radius = 0.001;
 #endif
 
-            TreeObejctPosition top (id,p,radius);
+            TreeObejctPosition top (id,p,radius,1.0/distance);
             treePosVec.push_back(top);
             trajectoryRecalculateFlag = true;
-            //ROS_INFO("new id: %d p1: %f p2: %f",id,p.getPos1(),p.getPos2());
+
+            Point p1 = top.getPoint();
+            ROS_INFO("new id: %d p1: %f p2: %f",id,p1.getPos1(),p1.getPos2());
+            ROS_INFO("new id: %d p1: %f p2: %f",id,p.getPos1(),p.getPos2());
         }
 
     }

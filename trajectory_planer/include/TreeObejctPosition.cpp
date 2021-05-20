@@ -1,14 +1,16 @@
 #include <TreeObejctPosition.h>
 
-TreeObejctPosition::TreeObejctPosition(unsigned short id, Point sum, double radius) : id(id),sum(sum), num(1), radius(radius), visited(0)
-{}
+TreeObejctPosition::TreeObejctPosition(unsigned short id, Point sum, double radius, double num) : id(id),sum(sum),  radius(radius), num(num),visited(0)
+{
+    this->sum.setPos(sum.getPos1()*num,sum.getPos2()*num);
+}
 
-bool TreeObejctPosition::addIfInclude (const Point& p, unsigned short idp)
+bool TreeObejctPosition::addIfInclude (const Point& p, unsigned short idp, double weigth)
 {
     if(ifInclude(p) && id == idp)
     {
-        sum.setPos(sum.getPos1()+p.getPos1(),sum.getPos2()+p.getPos2());
-        num++;
+        sum.setPos(sum.getPos1()+(p.getPos1()*weigth),sum.getPos2()+(p.getPos2()*weigth));
+        num+=weigth;
         return true;
     }
     return false;

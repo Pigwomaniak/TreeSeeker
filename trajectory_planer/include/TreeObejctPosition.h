@@ -16,9 +16,9 @@ private:
 
 class TreeObejctPosition{
 public:
-	TreeObejctPosition(unsigned short id, Point sum, double radius);
+	TreeObejctPosition(unsigned short id, Point sum, double radius, double num);
 
-	bool addIfInclude (const Point& p,unsigned short idp);
+	bool addIfInclude (const Point& p,unsigned short idp, double weigth);
 	bool ifInclude (const Point& p);
 	Point getPoint()const;
 	unsigned short getId()const{return id;};
@@ -29,7 +29,7 @@ public:
 private:
 	unsigned short id;
 	Point sum;
-	unsigned int num;
+	double num;
 	const double radius;
 	bool visited;
 };
