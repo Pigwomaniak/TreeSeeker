@@ -29,3 +29,4 @@ void findTrajectory(unsigned short id);
 void sendOutMessage();
 void printInfo();
 void resetGoolFlag();
+void setVisitedPoint();

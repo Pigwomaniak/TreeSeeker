@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     	{
     		errorCounter++;
     	}
-
+        setVisitedPoint();
     	sendOutMessage();
 
     	printInfo();

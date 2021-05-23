@@ -97,7 +97,7 @@ void processReadPoints()
         {
 
 #if MODE == 0
-        double radius = 1.0;
+        double radius = 2.0;
 #else
         double radius = 0.001;
 #endif
@@ -257,7 +257,7 @@ void printInfo()
 }
 
 
-void setVisitedPoit()
+void setVisitedPoint()
 {
     if(readAchievePos)
     {
@@ -271,5 +271,6 @@ void setVisitedPoit()
                 treePos.setVisited();
             }
         }
+        trajectoryRecalculateFlag = true;
     }
 }
