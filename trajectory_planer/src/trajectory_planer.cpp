@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     ros::Subscriber point_sub = trajectory_planer.subscribe("/objec_global_localizator", 1, new_Point_cb);
     ros::Subscriber global_pose_sub = trajectory_planer.subscribe("/mavros/global_position/global", 1, global_pos_cb);
     ros::Subscriber local_pose_sub = trajectory_planer.subscribe("/mavros/global_position/local", 1, local_pos_cb);
-    ros::Subscriber achieve_point_sub = trajectory_planer.subscribe("/drone_ridder", 1, achieve_point_cb);
+    ros::Subscriber achieve_point_sub = trajectory_planer.subscribe("/trajectory_planer/waypoint_reach", 1, achieve_point_cb);
 
     init_publisher(trajectory_planer);
 

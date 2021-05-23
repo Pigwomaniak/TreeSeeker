@@ -215,7 +215,7 @@ void findLoverCost (const std::vector<Point>& points, std::vector<size_t>& v, do
 }
 
 void init_publisher(ros::NodeHandle controlNode){
-    goal_pos_pub = controlNode.advertise<trajectory_planer_msgs::TrajectoryPlaner>("/trajectory_planer", 1);
+    goal_pos_pub = controlNode.advertise<trajectory_planer_msgs::TrajectoryPlaner>("/trajectory_planer/next_waypoint", 1);
 }
 
 void sendOutMessage()
@@ -250,7 +250,7 @@ void printInfo()
                 Point p = treePos.getPoint();
                 ROS_INFO("ID %d Goal p1: %f p2: %f",treePos.getId(), p.getPos1(), p.getPos2());
         }
-        ROS_INFO("Goal has idnex %d",goalPointId);
+        ROS_INFO("Goal has index %d",int(goalPointId));
         Point p = treePosVec[goalPointId].getPoint();
         ROS_INFO("Goal p1: %f p2: %f", p.getPos1(), p.getPos2());
     }

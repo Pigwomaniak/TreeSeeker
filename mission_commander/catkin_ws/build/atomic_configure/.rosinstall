@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/maciek/catkin_ws/src/tree_seeker/mission_commander/catkin_ws/build/devel/setup.sh

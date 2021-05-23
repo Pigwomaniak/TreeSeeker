@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: trajectory_planer_msgs
+Description: Description of trajectory_planer_msgs
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: geometry_msgs std_msgs message_runtime

@@ -1,0 +1,8 @@
+prefix=/home/maciek/catkin_ws/src/tree_seeker/trajectory_planer_msgs/catkin_ws/build/devel
+
+Name: trajectory_planer_msgs
+Description: Description of trajectory_planer_msgs
+Version: 0.0.0
+Cflags: -I/home/maciek/catkin_ws/src/tree_seeker/trajectory_planer_msgs/catkin_ws/build/devel/include
+Libs: -L${prefix}/lib 
+Requires: geometry_msgs std_msgs message_runtime

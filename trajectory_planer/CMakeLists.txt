@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   darknet_ros_msgs
   object_global_localizator_msgs
+  trajectory_planer_msgs
 )
 
 ## System dependencies are found with CMake's conventions
