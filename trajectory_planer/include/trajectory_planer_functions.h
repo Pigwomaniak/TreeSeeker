@@ -25,7 +25,7 @@ bool checkReadFlag();
 void processReadPoints();
 void findLoverCost (const std::vector<Point>& points, std::vector<size_t>& v, double actualCost, double& minCost, std::vector<size_t>& result);
 std::vector<size_t> findBestTrajectory(const std::vector<Point>& points, const Point& dronePos);
-void findTrajectory(unsigned short id);
+void findTrajectory();
 void sendOutMessage();
 void printInfo();
 void resetGoolFlag();

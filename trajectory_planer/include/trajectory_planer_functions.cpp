@@ -114,7 +114,7 @@ void processReadPoints()
     }
 }
 
-void findTrajectory(unsigned short id)
+void findTrajectory()
 {
 
 #if MODE == 0
@@ -138,7 +138,7 @@ void findTrajectory(unsigned short id)
 
         for(const auto& treePos:treePosVec)
         {
-            if(treePos.getId()==id && !treePos.isVisited())
+            if((treePos.getId()== 1 || treePos.getId()== 2) && !treePos.isVisited())
             {
                 points.push_back(treePos.getPoint());
             }
@@ -233,6 +233,7 @@ void sendOutMessage()
         Point p = treePosVec[goalPointId].getPoint();
         outMessage.pos1 = p.getPos1();
         outMessage.pos2 = p.getPos2();
+        outMessage.idClassObject = treePosVec[goalPointId].getId();
 
         //ROS_INFO("Goal p1: %f p2: %f", p.getPos1(), p.getPos2());
 

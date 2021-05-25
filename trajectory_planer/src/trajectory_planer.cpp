@@ -1,6 +1,5 @@
 #include <trajectory_planer_functions.h>
 
-#define ID 1
 
 
 unsigned int errorCounter = 0;
@@ -29,7 +28,7 @@ int main(int argc, char** argv) {
     	if(checkReadFlag())
     	{
     		processReadPoints();
-    		findTrajectory(ID);
+    		findTrajectory();
     	}
     	else
     	{
