@@ -104,9 +104,33 @@ MissionState goToNextTree(){
         //ROS_INFO("going to %f, %f, %f", waypoint.x, waypoint.y, waypoint.z);
     } else{
         ROS_INFO("Tree reach: x: %f, y: %f", waypoint.x, waypoint.y);
+        ros::Duration(1).sleep();
+        return MissionState::dropBall;
+        //waypoint_reach_pub.publish(waypointToTree);
+    }
+    return MissionState::goToNextTree;
+}
+
+MissionState dropBall(){
+    geometry_msgs::Point waypoint;
+    waypoint.x = waypointToTree.pos1;
+    waypoint.y = waypointToTree.pos2;
+    waypoint.z = DROP_BALL_ALT;
+    set_local_pos_pub.publish(waypoint);
+    if(pointDistance(waypoint) > DROP_WAYPOINT_ACCURACY){
+        return MissionState::dropBall;
+    } else{
+        ros::Duration(2).sleep();
+        //ball drop execute
+        ros::spinOnce();
         ros::Duration(2).sleep();
         waypoint_reach_pub.publish(waypointToTree);
+        ros::spinOnce();
     }
+    return MissionState::goToNextTree;
+}
+
+MissionState searchForTrees(){
     return MissionState::goToNextTree;
 }
 

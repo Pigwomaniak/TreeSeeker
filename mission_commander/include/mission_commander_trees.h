@@ -18,12 +18,15 @@
 #define MAV_STATE_ACTIVE 4
 #define MERES_TO_LATITUDE 0.000008983031
 #define POSITION_WAYPOINT_ACCURACY 0.5 // in meters
+#define DROP_WAYPOINT_ACCURACY 0.2 // in meters
 
 enum class MissionState{
     standby,
     waitingForArm,
     gettingOnMissionStartPlace,
-    goToNextTree
+    goToNextTree,
+    dropBall,
+    searchForTrees
 };
 
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg);
@@ -35,6 +38,8 @@ MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::O
 MissionState getToStartPlace(sensor_msgs::NavSatFix startingPoint, const sensor_msgs::NavSatFix& takeoffPoint);
 MissionState getToStartPlace(geometry_msgs::Point startingPoint);
 MissionState goToNextTree();
+MissionState dropBall();
+MissionState searchForTrees();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global);
 double pointDistance(const geometry_msgs::Point& destinationPoint);
 double headingToPoint(const geometry_msgs::Point& destinationPoint);

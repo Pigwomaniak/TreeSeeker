@@ -144,7 +144,10 @@ void findTrajectory()
             }
         }
 
-        if (points.size()==0) return;
+        if (points.size()==0) {
+            goolFlag = false;
+            return;
+        }
 
         std::vector<size_t> trajectory = findBestTrajectory(points,dronePos);
 

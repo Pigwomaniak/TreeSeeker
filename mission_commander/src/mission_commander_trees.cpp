@@ -32,6 +32,9 @@ int main(int argc, char** argv){
             case MissionState::goToNextTree:
                 missionState = goToNextTree();
                 break;
+            case MissionState::dropBall:
+                missionState = dropBall();
+                break;
             default: break;
         }
     rate.sleep();
