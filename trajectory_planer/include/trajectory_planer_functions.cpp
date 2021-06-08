@@ -237,6 +237,7 @@ void sendOutMessage()
         outMessage.pos1 = p.getPos1();
         outMessage.pos2 = p.getPos2();
         outMessage.idClassObject = treePosVec[goalPointId].getId();
+        outMessage.updateCounter = treePosVec[goalPointId].getUpdateCounter();
 
         //ROS_INFO("Goal p1: %f p2: %f", p.getPos1(), p.getPos2());
 

@@ -25,6 +25,7 @@ public:
 	double getRadius()const {return radius;};
 	bool isVisited()const {return visited;};
 	void setVisited(){visited = true;};
+	unsigned short getUpdateCounter()const {return updateCounter;};
 
 private:
 	unsigned short id;
@@ -32,6 +33,7 @@ private:
 	double num;
 	const double radius;
 	bool visited;
+	unsigned short updateCounter;
 };
 
 
