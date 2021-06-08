@@ -62,6 +62,20 @@ where drone at first will perform:
 * debug global position waypoint setting issue
 * idiot IPE
 * test in field
+
+## Usefull commadns
+If there is no topics
+
+```rosrun mavros mavsys rate --all 30```
+
+To run mavros node
+
+```roslaunch mavros apm.launch fcu_url:=/dev/ttyTHS0:921600```
+
+If no permission to UART
+
+```sudo chmod 777 /dev/ttyTHS0```
+
 ## Status
 Project is: _in progress_
 

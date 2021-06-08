@@ -87,18 +87,35 @@ MissionState getToStartPlace(geometry_msgs::Point startingPoint){
     set_heading_pub.publish(heading);
     set_local_pos_pub.publish(startingPoint);
     if(pointDistance(startingPoint) < POSITION_WAYPOINT_ACCURACY){
-        ROS_INFO("Start point reach, going to next tree");
-        return MissionState::goToNextTree;
+        ROS_INFO("Start point reach");
+        return MissionState::firstLookAtField;
     } else {
         return MissionState::gettingOnMissionStartPlace;
     }
 }
 
+MissionState firstLookAtField(geometry_msgs::Point endPoint){
+    if(local_position.pose.pose.position.z < 5){
+        return MissionState::gettingOnMissionStartPlace;
+    }
+    std_msgs::Float64 heading;
+    heading.data = headingToPoint(endPoint);
+    set_heading_pub.publish(heading);
+    set_local_pos_pub.publish(endPoint);
+    if(pointDistance(endPoint) < POSITION_WAYPOINT_ACCURACY){
+        ROS_INFO("Look up on field reached point reach, going to trees");
+        return MissionState::goToNextTree;
+    } else {
+        return MissionState::firstLookAtField;
+    }
+}
+
+
 MissionState goToNextTree(){
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
-    waypoint.z = FLY_ALT;
+    waypoint.z = LOW_FLY_ALT;
     if(pointDistance(waypoint) > POSITION_WAYPOINT_ACCURACY){
         set_local_pos_pub.publish(waypoint);
         //ROS_INFO("going to %f, %f, %f", waypoint.x, waypoint.y, waypoint.z);
@@ -121,16 +138,13 @@ MissionState dropBall(){
         return MissionState::dropBall;
     } else{
         ros::Duration(2).sleep();
+        ROS_INFO("Ball dropped");
         //ball drop execute
         ros::spinOnce();
         ros::Duration(2).sleep();
         waypoint_reach_pub.publish(waypointToTree);
         ros::spinOnce();
     }
-    return MissionState::goToNextTree;
-}
-
-MissionState searchForTrees(){
     return MissionState::goToNextTree;
 }
 

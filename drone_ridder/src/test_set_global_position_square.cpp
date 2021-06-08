@@ -6,7 +6,8 @@
 #include <sensor_msgs/NavSatFix.h>
 #include <nav_msgs/Odometry.h>
 
-
+#define ASL_TO_WGS83 -33.5 // Łódź
+//#define ASL_TO_WGS83 -37 // Kąkolewo
 
 sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
     ROS_INFO("Test of set_global_position drone will fly 5m square");
     positionGlobal.pose.position.latitude = global_position.latitude;
     positionGlobal.pose.position.longitude = global_position.longitude;
-    positionGlobal.pose.position.altitude = global_position.altitude;
+    positionGlobal.pose.position.altitude = global_position.altitude + ASL_TO_WGS83;
     heading.data = 0;
 
     set_global_pos_pub.publish(positionGlobal);
