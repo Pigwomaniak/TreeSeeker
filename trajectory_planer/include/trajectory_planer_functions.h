@@ -9,6 +9,8 @@
 #include <object_global_localizator_msgs/ObjectGlobalPosition.h>
 #include <object_global_localizator_msgs/ObjectsGlobalPositions.h>
 #include <trajectory_planer_msgs/TrajectoryPlaner.h>
+#include <trajectory_planer_msgs/SimpleTree.h>
+#include <trajectory_planer_msgs/treeTable.h>
 #include <cmath>
 #include <TreeObejctPosition.h>
 #include <vector>
@@ -20,6 +22,7 @@ void new_Point_cb(const object_global_localizator_msgs::ObjectsGlobalPositions::
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg);
 void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg);
 void achieve_point_cb(const trajectory_planer_msgs::TrajectoryPlaner::ConstPtr& msg);
+bool tree_table_cb(trajectory_planer_msgs::treeTable::Request& req, trajectory_planer_msgs::treeTable::Response& res);
 void resetReadFlag();
 bool checkReadFlag();
 void processReadPoints();

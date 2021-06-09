@@ -16,6 +16,8 @@ int main(int argc, char** argv) {
 
     init_publisher(trajectory_planer);
 
+    ros::ServiceServer tree_table_srv = trajectory_planer.advertiseService("/trajectory_planer/tree_table_srv", tree_table_cb);
+
     ros::Rate rate(2.0);
     ROS_INFO("Trajectory planer node started");
     resetReadFlag();
