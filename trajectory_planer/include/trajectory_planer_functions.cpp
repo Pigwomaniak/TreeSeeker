@@ -49,6 +49,29 @@ void achieve_point_cb(const trajectory_planer_msgs::TrajectoryPlaner::ConstPtr& 
     //ROS_INFO("local pos read");
 }
 
+
+bool tree_table_cb(trajectory_planer_msgs::treeTable::Request& req, trajectory_planer_msgs::treeTable::Response& res)
+{
+    if(req.sendResponse == true)
+    {
+        for(const auto& treePos:treePosVec)
+        {
+            trajectory_planer_msgs::SimpleTree tree;
+
+            tree.idClassObject = treePos.getId();
+            tree.updateCounter = treePos.getUpdateCounter();
+
+            Point p = treePos.getPoint();
+
+            tree.pos1 = p.getPos1();
+            tree.pos2 = p.getPos2();
+
+            res.treeTable.push_back(tree);
+        }
+    }
+    return true;
+}
+
 void resetReadFlag()
 {
     readFlag = false;
