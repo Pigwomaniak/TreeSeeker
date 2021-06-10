@@ -11,7 +11,9 @@
 #include <std_msgs/String.h>
 #include <geographic_msgs/GeoPoseStamped.h>
 #include <mavros_msgs/State.h>
+#include <mavros_msgs/ExtendedState.h>
 #include <geometry_msgs/Point.h>
+#include <std_msgs/String.h>
 
 #define FLY_ALT 30
 #define DROP_BALL_ALT 5
@@ -28,6 +30,7 @@ enum class MissionState{
     firstLookAtField,
     goToNextTree,
     dropBall,
+    goHome
 };
 
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg);
@@ -41,6 +44,7 @@ MissionState getToStartPlace(geometry_msgs::Point startingPoint);
 MissionState firstLookAtField(geometry_msgs::Point endPoint);
 MissionState goToNextTree();
 MissionState dropBall();
+MissionState goHome();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global);
 double pointDistance(const geometry_msgs::Point& destinationPoint);
 double headingToPoint(const geometry_msgs::Point& destinationPoint);

@@ -42,6 +42,12 @@ int main(int argc, char** argv){
             case MissionState::dropBall:
                 missionState = dropBall();
                 break;
+            case MissionState::goHome:
+                missionState = goHome();
+                break;
+            case MissionState::standby:
+                ros::Duration(5).sleep();
+                ROS_INFO("Standby");
             default: break;
         }
     rate.sleep();

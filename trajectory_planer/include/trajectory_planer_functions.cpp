@@ -223,8 +223,7 @@ void init_publisher(ros::NodeHandle controlNode){
 
 void sendOutMessage()
 {
-    if(goolFlag)
-    {
+    if(goolFlag) {
         trajectory_planer_msgs::TrajectoryPlaner outMessage;
 
 #if MODE == 0
@@ -241,6 +240,10 @@ void sendOutMessage()
 
         //ROS_INFO("Goal p1: %f p2: %f", p.getPos1(), p.getPos2());
 
+        goal_pos_pub.publish(outMessage);
+    } else{
+        trajectory_planer_msgs::TrajectoryPlaner outMessage;
+        outMessage.mode = "empty";
         goal_pos_pub.publish(outMessage);
     }
 }

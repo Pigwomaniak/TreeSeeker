@@ -8,6 +8,7 @@ sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
 trajectory_planer_msgs::TrajectoryPlaner waypointToTree;
 mavros_msgs::State mavState;
+mavros_msgs::ExtendedState extendedMavState;
 
 ros::Publisher set_local_pos_pub;
 ros::Publisher set_heading_pub;
@@ -20,6 +21,7 @@ ros::Subscriber global_pose_sub;
 ros::Subscriber local_pose_sub;
 ros::Subscriber trajectory_planer_sub;
 ros::Subscriber mav_state_sub;
+ros::Subscriber extended_mav_state_sub;
 
 
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
@@ -36,6 +38,9 @@ void trajectory_planer_cb(const trajectory_planer_msgs::TrajectoryPlaner::ConstP
 void mav_state_cb(const mavros_msgs::State::ConstPtr& msg){
     mavState = *msg;
 }
+void ext_mav_state_cb(const mavros_msgs::ExtendedState::ConstPtr& msg){
+    extendedMavState = *msg;
+}
 
 
 void init_publisher_subscriber(ros::NodeHandle controlNode){
@@ -51,6 +56,7 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     local_pose_sub = controlNode.subscribe("/mavros/global_position/local", 1, local_pos_cb);
     trajectory_planer_sub = controlNode.subscribe("/trajectory_planer/next_waypoint", 1, trajectory_planer_cb);
     mav_state_sub = controlNode.subscribe("/mavros/state", 1, mav_state_cb);
+    extended_mav_state_sub = controlNode.subscribe("/mavros/extended_state", 1, ext_mav_state_cb);
 }
 
 MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::Odometry* takeOffPoint){
@@ -120,10 +126,13 @@ MissionState goToNextTree(){
         set_local_pos_pub.publish(waypoint);
         //ROS_INFO("going to %f, %f, %f", waypoint.x, waypoint.y, waypoint.z);
     } else{
+        if(waypointToTree.mode == "empty"){
+            ROS_INFO("No more trees, going home");
+            return MissionState::goHome;
+        }
         ROS_INFO("Tree reach: x: %f, y: %f", waypoint.x, waypoint.y);
         ros::Duration(1).sleep();
         return MissionState::dropBall;
-        //waypoint_reach_pub.publish(waypointToTree);
     }
     return MissionState::goToNextTree;
 }
@@ -146,6 +155,22 @@ MissionState dropBall(){
         ros::spinOnce();
     }
     return MissionState::goToNextTree;
+}
+
+MissionState goHome(){
+    if(mavState.mode != mavros_msgs::State::MODE_APM_COPTER_RTL){
+        std_msgs::String mode;
+        mode.data = "rtl";
+        set_mode_pub.publish(mode);
+        return MissionState::goHome;
+    }
+    if(extendedMavState.landed_state == mavros_msgs::ExtendedState::LANDED_STATE_ON_GROUND){
+        ROS_INFO("Landed");
+        return MissionState::standby;
+    } else{
+        ros::Duration(1).sleep();
+    }
+    return MissionState::goHome;
 }
 
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global){
