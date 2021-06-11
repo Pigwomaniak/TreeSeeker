@@ -21,7 +21,7 @@
 #define MAV_STATE_ACTIVE 4
 #define MERES_TO_LATITUDE 0.000008983031
 #define POSITION_WAYPOINT_ACCURACY 0.5 // in meters
-#define DROP_WAYPOINT_ACCURACY 0.2 // in meters
+#define DROP_WAYPOINT_ACCURACY 0.3 // in meters
 
 enum class MissionState{
     standby,

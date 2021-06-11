@@ -122,14 +122,14 @@ MissionState goToNextTree(){
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
     waypoint.z = LOW_FLY_ALT;
+    if(waypointToTree.mode == "empty"){
+            ROS_INFO("No more trees, going home");
+            return MissionState::goHome;
+    }
     if(pointDistance(waypoint) > POSITION_WAYPOINT_ACCURACY){
         set_local_pos_pub.publish(waypoint);
         //ROS_INFO("going to %f, %f, %f", waypoint.x, waypoint.y, waypoint.z);
     } else{
-        if(waypointToTree.mode == "empty"){
-            ROS_INFO("No more trees, going home");
-            return MissionState::goHome;
-        }
         ROS_INFO("Tree reach: x: %f, y: %f", waypoint.x, waypoint.y);
         ros::Duration(1).sleep();
         return MissionState::dropBall;
