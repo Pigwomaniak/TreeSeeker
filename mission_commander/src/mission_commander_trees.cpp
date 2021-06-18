@@ -6,6 +6,7 @@
 int main(int argc, char** argv){
     sensor_msgs::NavSatFix takeOffPointWGS84;
     nav_msgs::Odometry takeOffPoint;
+    /*
     sensor_msgs::NavSatFix missionStartPoint;
     geometry_msgs::Point missionStartPointLocal;
     missionStartPointLocal.x = -40;
@@ -16,7 +17,7 @@ int main(int argc, char** argv){
     fieldEndPoint.x = -40;
     fieldEndPoint.y = 90;
     fieldEndPoint.z = FLY_ALT;
-
+    */
     ros::init(argc, argv, "mission_commander_trees");
     ros::NodeHandle mission_commander_trees("~");
     init_publisher_subscriber(mission_commander_trees);
@@ -31,16 +32,16 @@ int main(int argc, char** argv){
                 break;
             case MissionState::gettingOnMissionStartPlace:
                 //missionState = getToStartPlace(missionStartPoint, takeOffPointWGS84); //global option
-                missionState = getToStartPlace(missionStartPointLocal);
+                missionState = getToStartPlace(mission_commander_trees);
                 break;
             case MissionState::firstLookAtField:
-                missionState = firstLookAtField(fieldEndPoint);
+                missionState = firstLookAtField(mission_commander_trees);
                 break;
             case MissionState::goToNextTree:
-                missionState = goToNextTree();
+                missionState = goToNextTree(mission_commander_trees);
                 break;
             case MissionState::dropBall:
-                missionState = dropBall();
+                missionState = dropBall(mission_commander_trees);
                 break;
             case MissionState::goHome:
                 missionState = goHome();

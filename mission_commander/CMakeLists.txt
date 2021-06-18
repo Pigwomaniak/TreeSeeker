@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   trajectory_planer_msgs
+  ball_droper_msgs
 )
 
 ## System dependencies are found with CMake's conventions

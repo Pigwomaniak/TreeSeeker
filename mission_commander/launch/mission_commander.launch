@@ -1,0 +1,4 @@
+<launch>
+    <rosparam command="load" file="$(find mission_commander)/config/trees_sim.yaml" />
+    <node pkg="mission_commander" type="mission_commander_trees" name="mission_commander_trees" output="screen" />
+</launch>

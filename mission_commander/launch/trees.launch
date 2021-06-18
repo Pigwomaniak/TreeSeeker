@@ -1,0 +1,11 @@
+<launch>
+    <rosparam command="load" file="$(find mission_commander)/config/trees.yaml" />
+    <include file="$(find mavros)/launch/apm.launch" />
+    <node pkg="drone_ridder" type="drone_ridder" name="drone_ridder" output="screen" />
+    <node pkg="object_global_localizator" type="object_global_localizator" name="object_global_localizator" output="screen" />
+    <node pkg="trajectory_planer" type="trajectory_planer" name="trajectory_planer" output="screen" />
+    <node pkg="ball_droper" type="ball_droper" name="ball_droper" output="screen" />
+    <include file="$(find darknet_ros)/launch/darknet_ros.launch" />
+    <node pkg="mission_commander" type="mission_commander_trees" name="mission_commander_trees" output="screen" />
+
+</launch>

@@ -23,6 +23,8 @@ ros::Subscriber trajectory_planer_sub;
 ros::Subscriber mav_state_sub;
 ros::Subscriber extended_mav_state_sub;
 
+ros::ServiceClient ball_droper_client;
+
 
 void global_pos_cb(const sensor_msgs::NavSatFix::ConstPtr& msg){
     global_position = *msg;
@@ -57,6 +59,8 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     trajectory_planer_sub = controlNode.subscribe("/trajectory_planer/next_waypoint", 1, trajectory_planer_cb);
     mav_state_sub = controlNode.subscribe("/mavros/state", 1, mav_state_cb);
     extended_mav_state_sub = controlNode.subscribe("/mavros/extended_state", 1, ext_mav_state_cb);
+    // Services
+    ball_droper_client = controlNode.serviceClient<ball_droper_msgs::drop_ball>("drop_ball");
 }
 
 MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::Odometry* takeOffPoint){
@@ -71,17 +75,35 @@ MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::O
     return MissionState::gettingOnMissionStartPlace;
 }
 
-// do dokończenia
-MissionState getToStartPlace(sensor_msgs::NavSatFix startingPoint, const sensor_msgs::NavSatFix& takeoffPoint){
-    geographic_msgs::GeoPoseStamped waypoint;
+MissionState getToStartPlace(const ros::NodeHandle& controlNode){
+    geometry_msgs::Point startingPoint;
+    sensor_msgs::NavSatFix startingPointGlobal;
+    double startPointLongitude;
+    double startPointLatitude;
+    double startEndAlt;
+    double waypointPositionAccuracy;
+    controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
+    controlNode.getParam("/trees/startPointLatitude", startPointLatitude);
+    controlNode.getParam("/trees/startPointLongitude", startPointLongitude);
+    controlNode.getParam("/trees/startEndAlt", startEndAlt);
+    startingPointGlobal.latitude = startPointLatitude;
+    startingPointGlobal.longitude = startPointLongitude;
+    startingPointGlobal.altitude = startEndAlt;
+    ROS_INFO("start lat: %f, start long: %f, start alt: %f", startPointLatitude, startPointLongitude, startEndAlt);
+    startingPoint = globalToLocalPosition(startingPointGlobal, controlNode);
+    if(local_position.pose.pose.position.z < 5){
+        return MissionState::gettingOnMissionStartPlace;
+    }
     std_msgs::Float64 heading;
-    heading.data = headingToPoint(globalToLocalPosition(startingPoint));
-    waypoint.pose.position.altitude = takeoffPoint.altitude + FLY_ALT;
-    waypoint.pose.position.longitude = startingPoint.longitude;
-    waypoint.pose.position.latitude = startingPoint.latitude;
+    heading.data = headingToPoint(startingPoint);
     set_heading_pub.publish(heading);
-    set_global_pos_pub.publish(waypoint);
-    return MissionState::gettingOnMissionStartPlace;
+    set_local_pos_pub.publish(startingPoint);
+    if(pointDistance(startingPoint) < waypointPositionAccuracy){
+        ROS_INFO("Start point reach");
+        return MissionState::firstLookAtField;
+    } else {
+        return MissionState::gettingOnMissionStartPlace;
+    }
 }
 
 MissionState getToStartPlace(geometry_msgs::Point startingPoint){
@@ -116,17 +138,53 @@ MissionState firstLookAtField(geometry_msgs::Point endPoint){
     }
 }
 
+MissionState firstLookAtField(const ros::NodeHandle& controlNode){
+    sensor_msgs::NavSatFix endPointGlobal;
+    double endPointLongitude;
+    double endPointLatitude;
+    double startEndAlt;
+    geometry_msgs::Point endPoint;
+    controlNode.getParam("/trees/endPointLatitude", endPointLatitude);
+    controlNode.getParam("/trees/endPointLongitude", endPointLongitude);
+    controlNode.getParam("/trees/startEndAlt", startEndAlt);
+    endPointGlobal.latitude = endPointLatitude;
+    endPointGlobal.longitude = endPointLongitude;
+    endPointGlobal.altitude = startEndAlt;
 
-MissionState goToNextTree(){
+    endPoint = globalToLocalPosition(endPointGlobal, controlNode);
+    if(local_position.pose.pose.position.z < 5){
+        return MissionState::gettingOnMissionStartPlace;
+    }
+    std_msgs::Float64 heading;
+    heading.data = headingToPoint(endPoint);
+    set_heading_pub.publish(heading);
+    set_local_pos_pub.publish(endPoint);
+    double waypointPositionAccuracy;
+    controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
+    if(pointDistance(endPoint) < waypointPositionAccuracy){
+
+        ROS_INFO("Look up on field reached point reach, going to trees");
+        return MissionState::goToNextTree;
+    } else {
+        return MissionState::firstLookAtField;
+    }
+}
+
+
+MissionState goToNextTree(ros::NodeHandle controlNode){
+    double waypointPositionAccuracy;
+    double lowFlyAlt;
+    controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
+    controlNode.getParam("/trees/lowFlyAlt", lowFlyAlt);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
-    waypoint.z = LOW_FLY_ALT;
+    waypoint.z = lowFlyAlt;
     if(waypointToTree.mode == "empty"){
             ROS_INFO("No more trees, going home");
             return MissionState::goHome;
     }
-    if(pointDistance(waypoint) > POSITION_WAYPOINT_ACCURACY){
+    if(pointDistance(waypoint) > waypointPositionAccuracy){
         set_local_pos_pub.publish(waypoint);
         //ROS_INFO("going to %f, %f, %f", waypoint.x, waypoint.y, waypoint.z);
     } else{
@@ -137,18 +195,29 @@ MissionState goToNextTree(){
     return MissionState::goToNextTree;
 }
 
-MissionState dropBall(){
+MissionState dropBall(ros::NodeHandle controlNode){
+    double dropBallAlt;
+    double dropWaypointAccuracy;
+    controlNode.getParam("/trees/dropBallAlt", dropBallAlt);
+    controlNode.getParam("/trees/dropWaypointAccuracy", dropWaypointAccuracy);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
-    waypoint.z = DROP_BALL_ALT;
+    waypoint.z = dropBallAlt;
     set_local_pos_pub.publish(waypoint);
-    if(pointDistance(waypoint) > DROP_WAYPOINT_ACCURACY){
+    if(pointDistance(waypoint) > dropWaypointAccuracy){
         return MissionState::dropBall;
     } else{
+        ball_droper_msgs::drop_ball ball_srv;
         ros::Duration(2).sleep();
+        if(waypointToTree.idClassObject == 2){
+            ball_srv.request.ball_to_drop = "A";
+        }
+        if(waypointToTree.idClassObject == 3){
+            ball_srv.request.ball_to_drop = "B";
+        }
+        ball_droper_client.call(ball_srv);
         ROS_INFO("Ball dropped");
-        //ball drop execute
         ros::spinOnce();
         ros::Duration(2).sleep();
         waypoint_reach_pub.publish(waypointToTree);
@@ -173,11 +242,14 @@ MissionState goHome(){
     return MissionState::goHome;
 }
 
-geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global){
+geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode){
     geometry_msgs::Point local;
-    local.z = global.altitude - (global_position.altitude - local_position.pose.pose.position.z);
-    local.x = local_position.pose.pose.position.x + (global.longitude - global_position.longitude) / (360.0 / 40075000 / cos(global_position.latitude * M_PI / 360));
+    double aslToWGS83;
+    controlNode.getParam("/trees/aslToWGS83", aslToWGS83);
+    local.z = global.altitude - global_position.altitude + local_position.pose.pose.position.z; // + aslToWGS83;
+    local.x = local_position.pose.pose.position.x + (global.longitude - global_position.longitude) / (360.0 / 40075000 / cos(global_position.latitude * M_PI / 180));
     local.y = local_position.pose.pose.position.y + (global.latitude - global_position.latitude) / MERES_TO_LATITUDE;
+    //ROS_INFO("LOCAL Z: %f, GLOBAL alt: %f, global_position: %f, local position: %f", local.z, global.altitude, global_position.altitude, local_position.pose.pose.position.z);
     return local;
 }
 
