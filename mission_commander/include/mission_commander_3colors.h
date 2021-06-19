@@ -14,23 +14,18 @@
 #include <mavros_msgs/ExtendedState.h>
 #include <geometry_msgs/Point.h>
 #include <std_msgs/String.h>
-#include <ball_droper_msgs/drop_ball.h>
 
 
-#define FLY_ALT 30
-#define DROP_BALL_ALT 5
-#define LOW_FLY_ALT 10
+
 #define MAV_STATE_ACTIVE 4
 #define MERES_TO_LATITUDE 0.000008983031
-#define POSITION_WAYPOINT_ACCURACY 0.5 // in meters
-#define DROP_WAYPOINT_ACCURACY 0.3 // in meters
 
 enum class MissionState{
     standby,
     waitingForArm,
     gettingOnMissionStartPlace,
     firstLookAtField,
-    goToNextTree,
+    goToNextObject,
     dropBall,
     goHome
 };
@@ -42,11 +37,8 @@ void mav_state_cb(const mavros_msgs::State::ConstPtr& msg);
 void init_publisher_subscriber(ros::NodeHandle controlNode);
 MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::Odometry* takeOffPoint);
 MissionState getToStartPlace(const ros::NodeHandle& controlNode);
-MissionState getToStartPlace(geometry_msgs::Point startingPoint);
 MissionState firstLookAtField(const ros::NodeHandle& controlNode);
-MissionState firstLookAtField(geometry_msgs::Point endPoint);
 MissionState goToNextObject(ros::NodeHandle controlNode);
-MissionState dropBall(ros::NodeHandle controlNode);
 MissionState goHome();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode);
 double pointDistance(const geometry_msgs::Point& destinationPoint);

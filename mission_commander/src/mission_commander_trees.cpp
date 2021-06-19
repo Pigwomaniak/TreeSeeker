@@ -38,7 +38,7 @@ int main(int argc, char** argv){
                 missionState = firstLookAtField(mission_commander_trees);
                 break;
             case MissionState::goToNextTree:
-                missionState = goToNextTree(mission_commander_trees);
+                missionState = goToNextObject(mission_commander_trees);
                 break;
             case MissionState::dropBall:
                 missionState = dropBall(mission_commander_trees);

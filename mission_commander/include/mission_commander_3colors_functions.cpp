@@ -2,7 +2,7 @@
 // Created by maciek on 22.05.2021.
 //
 
-#include "mission_commander_trees.h"
+#include "mission_commander_3colors.h"
 
 sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
@@ -103,38 +103,6 @@ MissionState getToStartPlace(const ros::NodeHandle& controlNode){
         return MissionState::firstLookAtField;
     } else {
         return MissionState::gettingOnMissionStartPlace;
-    }
-}
-
-MissionState getToStartPlace(geometry_msgs::Point startingPoint){
-   if(local_position.pose.pose.position.z < 5){
-       return MissionState::gettingOnMissionStartPlace;
-   }
-    std_msgs::Float64 heading;
-    heading.data = headingToPoint(startingPoint);
-    set_heading_pub.publish(heading);
-    set_local_pos_pub.publish(startingPoint);
-    if(pointDistance(startingPoint) < POSITION_WAYPOINT_ACCURACY){
-        ROS_INFO("Start point reach");
-        return MissionState::firstLookAtField;
-    } else {
-        return MissionState::gettingOnMissionStartPlace;
-    }
-}
-
-MissionState firstLookAtField(geometry_msgs::Point endPoint){
-    if(local_position.pose.pose.position.z < 5){
-        return MissionState::gettingOnMissionStartPlace;
-    }
-    std_msgs::Float64 heading;
-    heading.data = headingToPoint(endPoint);
-    set_heading_pub.publish(heading);
-    set_local_pos_pub.publish(endPoint);
-    if(pointDistance(endPoint) < POSITION_WAYPOINT_ACCURACY){
-        ROS_INFO("Look up on field reached point reach, going to trees");
-        return MissionState::goToNextTree;
-    } else {
-        return MissionState::firstLookAtField;
     }
 }
 
