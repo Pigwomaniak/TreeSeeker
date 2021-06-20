@@ -78,17 +78,23 @@ MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::O
 MissionState getToStartPlace(const ros::NodeHandle& controlNode){
     geometry_msgs::Point startingPoint;
     sensor_msgs::NavSatFix startingPointGlobal;
+    geographic_msgs::GeoPoseStamped startingPointGlobalOut;
     double startPointLongitude;
     double startPointLatitude;
     double startEndAlt;
     double waypointPositionAccuracy;
+    double aslToWGS83;
     controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
     controlNode.getParam("/trees/startPointLatitude", startPointLatitude);
     controlNode.getParam("/trees/startPointLongitude", startPointLongitude);
     controlNode.getParam("/trees/startEndAlt", startEndAlt);
+    controlNode.getParam("/trees/aslToWGS83", aslToWGS83);
     startingPointGlobal.latitude = startPointLatitude;
     startingPointGlobal.longitude = startPointLongitude;
     startingPointGlobal.altitude = startEndAlt;
+    startingPointGlobalOut.pose.position.altitude = startEndAlt + aslToWGS83;
+    startingPointGlobalOut.pose.position.latitude = startPointLatitude;
+    startingPointGlobalOut.pose.position.longitude =startPointLongitude;
     ROS_INFO("start lat: %f, start long: %f, start alt: %f", startPointLatitude, startPointLongitude, startEndAlt);
     startingPoint = globalToLocalPosition(startingPointGlobal, controlNode);
     if(local_position.pose.pose.position.z < 5){
@@ -97,8 +103,9 @@ MissionState getToStartPlace(const ros::NodeHandle& controlNode){
     std_msgs::Float64 heading;
     heading.data = headingToPoint(startingPoint);
     set_heading_pub.publish(heading);
-    set_local_pos_pub.publish(startingPoint);
-    if(pointDistance(startingPoint) < waypointPositionAccuracy){
+    //set_local_pos_pub.publish(startingPoint);
+    set_global_pos_pub.publish(startingPointGlobalOut);
+    if(pointDistance(startingPointGlobal) < waypointPositionAccuracy){
         ROS_INFO("Start point reach");
         return MissionState::firstLookAtField;
     } else {
@@ -140,17 +147,22 @@ MissionState firstLookAtField(geometry_msgs::Point endPoint){
 
 MissionState firstLookAtField(const ros::NodeHandle& controlNode){
     sensor_msgs::NavSatFix endPointGlobal;
+    geographic_msgs::GeoPoseStamped endingPointGlobalOut;
     double endPointLongitude;
     double endPointLatitude;
     double startEndAlt;
+    double aslToWGS83;
     geometry_msgs::Point endPoint;
     controlNode.getParam("/trees/endPointLatitude", endPointLatitude);
     controlNode.getParam("/trees/endPointLongitude", endPointLongitude);
     controlNode.getParam("/trees/startEndAlt", startEndAlt);
+    controlNode.getParam("/trees/aslToWGS83", aslToWGS83);
     endPointGlobal.latitude = endPointLatitude;
     endPointGlobal.longitude = endPointLongitude;
     endPointGlobal.altitude = startEndAlt;
-
+    endingPointGlobalOut.pose.position.altitude = startEndAlt + aslToWGS83;
+    endingPointGlobalOut.pose.position.latitude = endPointLatitude;
+    endingPointGlobalOut.pose.position.longitude =endPointLongitude;
     endPoint = globalToLocalPosition(endPointGlobal, controlNode);
     if(local_position.pose.pose.position.z < 5){
         return MissionState::gettingOnMissionStartPlace;
@@ -158,10 +170,11 @@ MissionState firstLookAtField(const ros::NodeHandle& controlNode){
     std_msgs::Float64 heading;
     heading.data = headingToPoint(endPoint);
     set_heading_pub.publish(heading);
-    set_local_pos_pub.publish(endPoint);
+    //set_local_pos_pub.publish(endPoint);
+    set_global_pos_pub.publish(endingPointGlobalOut);
     double waypointPositionAccuracy;
     controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
-    if(pointDistance(endPoint) < waypointPositionAccuracy){
+    if(pointDistance(endPointGlobal) < waypointPositionAccuracy){
 
         ROS_INFO("Look up on field reached point reach, going to trees");
         return MissionState::goToNextTree;
@@ -257,6 +270,17 @@ double pointDistance(const geometry_msgs::Point& destinationPoint){
     double dx = destinationPoint.x - local_position.pose.pose.position.x;
     double dy = destinationPoint.y - local_position.pose.pose.position.y;
     double dz = destinationPoint.z - local_position.pose.pose.position.z;
+    return (sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2)));
+}
+
+double pointDistance(const sensor_msgs::NavSatFix& dest){
+    double dla = dest.latitude - global_position.latitude;
+    double dlo = dest.longitude - global_position.longitude;
+    double dalt = dest.altitude - global_position.altitude;
+    double dx = dla / MERES_TO_LATITUDE;
+    double dy = dlo / (360.0 / 40075000 / cos(global_position.latitude * M_PI / 180));
+    double dz = dalt;
+    ROS_INFO("error pos: %f, %f, %f", dx, dy, dz);
     return (sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2)));
 }
 

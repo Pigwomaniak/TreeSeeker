@@ -50,4 +50,5 @@ MissionState dropBall(ros::NodeHandle controlNode);
 MissionState goHome();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode);
 double pointDistance(const geometry_msgs::Point& destinationPoint);
+double pointDistance(const sensor_msgs::NavSatFix& dest);
 double headingToPoint(const geometry_msgs::Point& destinationPoint);

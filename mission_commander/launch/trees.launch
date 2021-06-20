@@ -1,5 +1,5 @@
 <launch>
-    <rosparam command="load" file="$(find mission_commander)/config/trees.yaml" />
+    <include file="$(find mission_commander)/launch/mission_commander.launch"/>
     <include file="$(find mavros)/launch/apm.launch" />
     <node pkg="jetbot_ros" type="jetbot_camera" name="jetbot_camera" output="screen"/>
     <node pkg="drone_ridder" type="drone_ridder" name="drone_ridder" output="screen" />
@@ -7,6 +7,5 @@
     <node pkg="trajectory_planer" type="trajectory_planer" name="trajectory_planer" output="screen" />
     <node pkg="ball_droper" type="ball_droper" name="ball_droper" output="screen" />
     <include file="$(find darknet_ros)/launch/darknet_ros.launch" />
-    <node pkg="mission_commander" type="mission_commander_trees" name="mission_commander_trees" output="screen" />
 
 </launch>

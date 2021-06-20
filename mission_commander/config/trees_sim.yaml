@@ -14,8 +14,8 @@ trees:
 #  conversions
 #  aslToWGS83: -33.5  # Łódź
 #  aslToWGS83: -37.0  # Kąkolewo
-  aslToWGS83: -10.0   # Simulation Gazebo
+  aslToWGS83: -19.5   # Simulation Gazebo
 #
 #   Accuracy
   dropWaypointAccuracy: 0.3       # [m]
-  waypointPositionAccuracy: 0.5   # [m]
+  waypointPositionAccuracy: 0.8   # [m]
