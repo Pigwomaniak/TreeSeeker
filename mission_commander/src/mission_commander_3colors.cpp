@@ -1,4 +1,4 @@
-
+#include <mission_commander_3colors.h>
 
 int main(int argc, char** argv){
 
@@ -7,14 +7,22 @@ int main(int argc, char** argv){
     init_publisher_subscriber(mission_commander_3colors);
     ros::Rate rate(2);
     MissionState missionState = MissionState::waitingForArm;
+    std::stack<sensor_msgs::NavSatFix> waypoints;
+    generateWaypoints(&waypoints, mission_commander_3colors);
     while (ros::ok()){
         ros::spinOnce();
         switch (missionState) {
             case MissionState::waitingForArm:
                 missionState = startMission(&takeOffPointWGS84, &takeOffPoint);
                 break;
-            case MissionState::gettingOnMissionStartPlace:
-                missionState = getToStartPlace(mission_commander_trees);
+            case MissionState::scanField:
+                missionState = scanField(mission_commander_3colors);
+                break;
+            case MissionState::goToNextObject:
+                missionState = goToNextObject(mission_commander_3colors);
+                break;
+            case MissionState::takeCloseLook:
+                missionState = ;
                 break;
             case MissionState::goHome:
                 missionState = goHome();

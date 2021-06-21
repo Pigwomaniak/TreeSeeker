@@ -14,6 +14,8 @@
 #include <mavros_msgs/ExtendedState.h>
 #include <geometry_msgs/Point.h>
 #include <std_msgs/String.h>
+#include <stack>
+
 
 
 
@@ -23,10 +25,9 @@
 enum class MissionState{
     standby,
     waitingForArm,
-    gettingOnMissionStartPlace,
-    firstLookAtField,
+    scanField,
     goToNextObject,
-    dropBall,
+    takeCloseLook,
     goHome
 };
 
@@ -36,10 +37,12 @@ void trajectory_planer_cb(const trajectory_planer_msgs::TrajectoryPlaner::ConstP
 void mav_state_cb(const mavros_msgs::State::ConstPtr& msg);
 void init_publisher_subscriber(ros::NodeHandle controlNode);
 MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::Odometry* takeOffPoint);
-MissionState getToStartPlace(const ros::NodeHandle& controlNode);
-MissionState firstLookAtField(const ros::NodeHandle& controlNode);
+MissionState scanField(ros::NodeHandle controlNode, std::stack<sensor_msgs::NavSatFix>* waypoints);
 MissionState goToNextObject(ros::NodeHandle controlNode);
+MissionState takeCloseLook(ros::NodeHandle controlNode);
 MissionState goHome();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode);
+int generateWaypoints(std::stack<sensor_msgs::NavSatFix>* waypoints, ros::NodeHandle controlNode);
 double pointDistance(const geometry_msgs::Point& destinationPoint);
 double headingToPoint(const geometry_msgs::Point& destinationPoint);
+

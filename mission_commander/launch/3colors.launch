@@ -1,11 +1,11 @@
 <launch>
-    <include file="mission_commander_trees.launch"/>
+    <include file="mission_commander_3color.launch"/>
     <include file="$(find mavros)/launch/apm.launch" />
     <node pkg="jetbot_ros" type="jetbot_camera" name="jetbot_camera" output="screen"/>
     <node pkg="drone_ridder" type="drone_ridder" name="drone_ridder" output="screen" />
     <include file="$(find object_global_localizator)/launch/object_global_localizator.launch"/>
     <node pkg="trajectory_planer" type="trajectory_planer" name="trajectory_planer" output="screen" />
     <node pkg="ball_droper" type="ball_droper" name="ball_droper" output="screen" />
-    <include file="$(find darknet_ros)/launch/darknet_ros_trees.launch" />
+    <include file="$(find darknet_ros)/launch/darknet_ros_3color.launch" />
 
 </launch>

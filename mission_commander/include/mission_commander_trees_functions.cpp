@@ -129,22 +129,6 @@ MissionState getToStartPlace(geometry_msgs::Point startingPoint){
     }
 }
 
-MissionState firstLookAtField(geometry_msgs::Point endPoint){
-    if(local_position.pose.pose.position.z < 5){
-        return MissionState::gettingOnMissionStartPlace;
-    }
-    std_msgs::Float64 heading;
-    heading.data = headingToPoint(endPoint);
-    set_heading_pub.publish(heading);
-    set_local_pos_pub.publish(endPoint);
-    if(pointDistance(endPoint) < POSITION_WAYPOINT_ACCURACY){
-        ROS_INFO("Look up on field reached point reach, going to trees");
-        return MissionState::goToNextTree;
-    } else {
-        return MissionState::firstLookAtField;
-    }
-}
-
 MissionState firstLookAtField(const ros::NodeHandle& controlNode){
     sensor_msgs::NavSatFix endPointGlobal;
     geographic_msgs::GeoPoseStamped endingPointGlobalOut;
@@ -162,7 +146,7 @@ MissionState firstLookAtField(const ros::NodeHandle& controlNode){
     endPointGlobal.altitude = startEndAlt;
     endingPointGlobalOut.pose.position.altitude = startEndAlt + aslToWGS83;
     endingPointGlobalOut.pose.position.latitude = endPointLatitude;
-    endingPointGlobalOut.pose.position.longitude =endPointLongitude;
+    endingPointGlobalOut.pose.position.longitude = endPointLongitude;
     endPoint = globalToLocalPosition(endPointGlobal, controlNode);
     if(local_position.pose.pose.position.z < 5){
         return MissionState::gettingOnMissionStartPlace;
@@ -183,12 +167,27 @@ MissionState firstLookAtField(const ros::NodeHandle& controlNode){
     }
 }
 
+MissionState firstLookAtField(geometry_msgs::Point endPoint){
+    if(local_position.pose.pose.position.z < 5){
+        return MissionState::gettingOnMissionStartPlace;
+    }
+    std_msgs::Float64 heading;
+    heading.data = headingToPoint(endPoint);
+    set_heading_pub.publish(heading);
+    set_local_pos_pub.publish(endPoint);
+    if(pointDistance(endPoint) < POSITION_WAYPOINT_ACCURACY){
+        ROS_INFO("Look up on field reached point reach, going to trees");
+        return MissionState::goToNextTree;
+    } else {
+        return MissionState::firstLookAtField;
+    }
+}
 
 MissionState goToNextObject(ros::NodeHandle controlNode){
     double waypointPositionAccuracy;
     double lowFlyAlt;
-    controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
-    controlNode.getParam("/trees/lowFlyAlt", lowFlyAlt);
+    controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
+    controlNode.getParam("/3color/lowFlyAlt", lowFlyAlt);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;

@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     	{
     		//ROS_INFO("Condition passed");
     		setDroneRotationMatrix();
-    		localizeObjects();
+    		localizeObjects(object_global_localizator);
     	}
     	else
     	{

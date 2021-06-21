@@ -1,0 +1,24 @@
+3color:
+  #   points
+  pointALo: 0
+  pointALa: 0
+  pointBLo: 0
+  pointBLa: 0
+  pointCLo: 0
+  pointCLa: 0
+  pointDLo: 0
+  pointDLa: 0
+
+  numberOfPaths: 12
+
+  #   altitudes
+  lowFlyAlt: 10.0     # [m]
+  flyAlt: 30.0        # [m]
+
+  #  conversions
+  #  aslToWGS83: -33.5  # Łódź
+  #  aslToWGS83: -37.0  # Kąkolewo
+  aslToWGS83: -10.0   # Simulation Gazebo
+
+  #   Accuracy
+  waypointPositionAccuracy: 0.5   # [m]
