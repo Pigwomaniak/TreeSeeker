@@ -28,7 +28,7 @@ void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg);
 void bounding_boxes_cb(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg);
 void setup_camera_rotation(double pitch);
 void init_publisher(ros::NodeHandle controlNode);
-void localizeObjects();
+void localizeObjects(ros::NodeHandle controlNode);
 void resetFlags();
 bool checkFlags();
 void setDroneRotationMatrix();

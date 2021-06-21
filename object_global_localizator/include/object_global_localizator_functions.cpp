@@ -51,20 +51,27 @@ void setup_camera_rotation(double pitch){
 }
 
 void init_publisher(ros::NodeHandle controlNode){
-    object_global_position_pub = controlNode.advertise<object_global_localizator_msgs::ObjectsGlobalPositions>("/objec_global_localizator", 1);
+    object_global_position_pub = controlNode.advertise<object_global_localizator_msgs::ObjectsGlobalPositions>("/object_global_localizator", 1);
 }
 
-void localizeObjects(){
+void localizeObjects(ros::NodeHandle controlNode){
+    double cameraXCenter, cameraYCenter, cameraXMax, cameraYMax, cameraXAngle, cameraYAngle;
+    controlNode.getParam("/object_global_localizator/cameraXCenter", cameraXCenter);
+    controlNode.getParam("/object_global_localizator/cameraYCenter", cameraYCenter);
+    controlNode.getParam("/object_global_localizator/cameraXMax", cameraXMax);
+    controlNode.getParam("/object_global_localizator/cameraYMax", cameraYMax);
+    controlNode.getParam("/object_global_localizator/cameraXAngle", cameraXAngle);
+    controlNode.getParam("/object_global_localizator/cameraYAngle", cameraYAngle);
     object_global_localizator_msgs::ObjectsGlobalPositions outMessage;
     for (const auto & bounding_boxe : boundingBoxes.bounding_boxes) {
         object_global_localizator_msgs::ObjectGlobalPosition objectGlobalPosition;
         objectGlobalPosition.classObject = bounding_boxe.Class;
         objectGlobalPosition.idClassObject = bounding_boxe.id;
         objectGlobalPosition.probabilityObject = bounding_boxe.probability;
-        double xObjCamera = -double(double(bounding_boxe.xmin) + (double(bounding_boxe.xmax - bounding_boxe.xmin) / 2) - CAMERA_X_CENTER);
-        double yObjCamera = -(double(bounding_boxe.ymin) + (double(bounding_boxe.ymax - bounding_boxe.ymin) / 2) - CAMERA_Y_CENTER);
-        double gamma = (xObjCamera / CAMERA_X_MAX) * CAMERA_X_ANGLE;
-        double beta = (yObjCamera / CAMERA_Y_MAX) * CAMERA_Y_ANGLE;
+        double xObjCamera = -double(double(bounding_boxe.xmin) + (double(bounding_boxe.xmax - bounding_boxe.xmin) / 2) - cameraXCenter);
+        double yObjCamera = -(double(bounding_boxe.ymin) + (double(bounding_boxe.ymax - bounding_boxe.ymin) / 2) - cameraYCenter);
+        double gamma = (xObjCamera / cameraXMax) * cameraXAngle;
+        double beta = (yObjCamera / cameraYMax) * cameraYAngle;
         Eigen::Matrix<double, 3, 1> scalarToObjCenter_Camera;
         double zScalarObj = sqrt(1 / (1 + pow(tan(gamma),2) * pow(cos(beta),2) + pow(tan(beta),2)));
         double yScalarObj = tan(beta) * zScalarObj;

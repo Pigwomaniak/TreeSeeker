@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     ros::init(argc, argv, "trajectory_planer");
     ros::NodeHandle trajectory_planer("~");
 
-    ros::Subscriber point_sub = trajectory_planer.subscribe("/objec_global_localizator", 1, new_Point_cb);
+    ros::Subscriber point_sub = trajectory_planer.subscribe("/object_global_localizator", 1, new_Point_cb);
     ros::Subscriber global_pose_sub = trajectory_planer.subscribe("/mavros/global_position/global", 1, global_pos_cb);
     ros::Subscriber local_pose_sub = trajectory_planer.subscribe("/mavros/global_position/local", 1, local_pos_cb);
     ros::Subscriber achieve_point_sub = trajectory_planer.subscribe("/trajectory_planer/waypoint_reach", 1, achieve_point_cb);
