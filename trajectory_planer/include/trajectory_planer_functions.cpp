@@ -137,9 +137,12 @@ void processReadPoints()
     }
 }
 
-void findTrajectory()
+void findTrajectory(ros::NodeHandle controlNode)
 {
-
+    int idToGo1, idToGo2, idToGo3;
+    controlNode.getParam("/trajectory_planer/idToGo1", idToGo1);
+    controlNode.getParam("/trajectory_planer/idToGo2", idToGo2);
+    controlNode.getParam("/trajectory_planer/idToGo3", idToGo3);
 #if MODE == 0
     Point dronePos(local_position.pose.pose.position.x,local_position.pose.pose.position.y);
 #else
@@ -161,7 +164,7 @@ void findTrajectory()
 
         for(const auto& treePos:treePosVec)
         {
-            if((treePos.getId()== 1 || treePos.getId()== 2) && !treePos.isVisited())
+            if((treePos.getId() == idToGo1 || treePos.getId() == idToGo2 || treePos.getId() == idToGo3) && !treePos.isVisited())
             {
                 points.push_back(treePos.getPoint());
             }

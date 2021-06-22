@@ -30,38 +30,34 @@ code and ru `catkin build`
 This repository is connected with [drone_sim](https://github.com/Pigwomaniak/drone_sim) repository where whole simiulation gazebo files are stored.
 
 ## Code Examples
-To run node for drone motion control:
+To run whole trees mission in simulation:
 
 ```
-rosrun tree_seeker drone_ridder
+roslaunch mission_commander trees_sim.launch
 ```
-At another terminal run test sequence for quick demonstration
+To run whole 3color mission in real world:
 ```
-rosrun tree_seeker test_DR_square
+roslaunch mission_commander 3color.launch
 ```
 
 ## Features
-Now the main node is [drone_riddeer](./src/drone_ridder.cpp) this node will provide 5 topisc to publish in for drone control.
-
-* "drone_ridder/set_mode" message `std_msgs::String` where y can rquest of mode hange
-* "drone_ridder/set_position_offset" message `geometry_msgs::Point` where values x, y, z are vector of movment in ENU.
-* "drone_ridder/set_local_position" message `geometry_msgs::Point` where values x, y, z are destination coordinates in local ENU.
-* "drone_ridder/heading" message `std_msgs::Float64` where value represent YAW angle. 0 is when x is facing Est and risig value i counter clockwise.
-* "drone_ridder/set_global_position" message `geographic_msgs::GeoPoseStamped` set LLA destination possion
 
 At start drone is waiting for user to manually set drone to _guided mode_ 
 next arming procedure is called and drone takes off at altitude _10m_. 
+After that the [mission_commander](./mission_commander) node is managing the mission.
+The [config parameters](./mission_commander/config) contains mission parameters for specific mission.
 
-The [testing program](./src/test_DR_square.cpp) provide simple square sequence
-where drone at first will perform:
+Whole system contains of following nodes:
 
-* 5m square at current altitude using global position feature
-* 5m square at altitude of 10m using local position feature
-* 5m square at current altitude using offset position feature
+* [mission_commander](./mission_commander)
+* [drone_ridder](./drone_ridder)
+* [object_global_localizator](./object_global_localizator)
+* [trajectory_planer](./trajectory_planer)
+* [ball_droper](https://github.com/Pigwomaniak/ball_droper)
 
 ###To-do
 
-* debug global position waypoint setting issue
+* object area measuring
 * idiot IPE
 * test in field
 ## Status
@@ -71,4 +67,4 @@ Project is: _in progress_
 Project inspired by [Inteligent-Quads](https://github.com/Intelligent-Quads)
 
 ## Contact
-Created by [Pigwomaniak](https://github.com/Pigwomaniak) - feel free to contact me!
+Created by [Pigwomaniak](https://github.com/Pigwomaniak) and [tom1322s](https://github.com/tom1322s) - feel free to contact!

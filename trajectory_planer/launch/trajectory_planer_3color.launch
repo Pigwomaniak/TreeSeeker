@@ -1,0 +1,4 @@
+<launch>
+    <rosparam command="load" file="$(find trajectory_planer)/config/3color.yaml" />
+    <node pkg="trajectory_planer" type="trajectory_planer" name="trajectory_planer" output="screen" />
+</launch>
