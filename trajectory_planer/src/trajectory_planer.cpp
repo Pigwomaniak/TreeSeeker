@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     	if(checkReadFlag())
     	{
     		processReadPoints();
-    		findTrajectory();
+    		findTrajectory(trajectory_planer);
     	}
     	else
     	{
