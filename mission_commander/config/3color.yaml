@@ -14,7 +14,7 @@
   #   altitudes
   lowFlyAlt: 10.0     # [m]
   flyAlt: 30.0        # [m]
-
+  closeLookAlt: 5.0   # [m]
   #  conversions
   #  aslToWGS83: -33.5  # Łódź
   #  aslToWGS83: -37.0  # Kąkolewo

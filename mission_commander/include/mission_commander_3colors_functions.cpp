@@ -9,6 +9,8 @@ nav_msgs::Odometry local_position;
 trajectory_planer_msgs::TrajectoryPlaner waypointToTree;
 mavros_msgs::State mavState;
 mavros_msgs::ExtendedState extendedMavState;
+sensor_msgs::Image yoloImage;
+bool needPhoto = false;
 
 ros::Publisher set_local_pos_pub;
 ros::Publisher set_heading_pub;
@@ -16,12 +18,14 @@ ros::Publisher set_offset_pub;
 ros::Publisher set_mode_pub;
 ros::Publisher set_global_pos_pub;
 ros::Publisher waypoint_reach_pub;
+ros::Publisher object_photo_pub;
 
 ros::Subscriber global_pose_sub;
 ros::Subscriber local_pose_sub;
 ros::Subscriber trajectory_planer_sub;
 ros::Subscriber mav_state_sub;
 ros::Subscriber extended_mav_state_sub;
+ros::Subscriber yolo_Photo_sub;
 
 ros::ServiceClient ball_droper_client;
 
@@ -44,9 +48,14 @@ void ext_mav_state_cb(const mavros_msgs::ExtendedState::ConstPtr& msg){
     extendedMavState = *msg;
 }
 
+void yolo_photo_cb(const sensor_msgs::Image::ConstPtr& msg){
+    if(needPhoto) yoloImage = *msg;
+}
+
 
 void init_publisher_subscriber(ros::NodeHandle controlNode){
     // Publishers
+    object_photo_pub = controlNode.advertise<sensor_msgs::Image>("/mission_commander/object_photo", 1);
     set_local_pos_pub = controlNode.advertise<geometry_msgs::Point>("/drone_ridder/set_local_position", 1);
     set_heading_pub = controlNode.advertise<std_msgs::Float64>("/drone_ridder/set_heading", 1);
     set_offset_pub = controlNode.advertise<geometry_msgs::Point>("/drone_ridder/set_position_offset", 1);
@@ -59,6 +68,7 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     trajectory_planer_sub = controlNode.subscribe("/trajectory_planer/next_waypoint", 1, trajectory_planer_cb);
     mav_state_sub = controlNode.subscribe("/mavros/state", 1, mav_state_cb);
     extended_mav_state_sub = controlNode.subscribe("/mavros/extended_state", 1, ext_mav_state_cb);
+    yolo_Photo_sub = controlNode.subscribe("/darknet_ros/detection_image", 1, yolo_photo_cb);
     // Services
     ball_droper_client = controlNode.serviceClient<ball_droper_msgs::drop_ball>("drop_ball");
 }
@@ -124,8 +134,28 @@ MissionState goToNextObject(ros::NodeHandle controlNode){
     return MissionState::goToNextObject;
 }
 
-MissionState goToNextObject(ros::NodeHandle controlNode){
-    return MissionState::goToNextObject;
+MissionState takeCloseLook(ros::NodeHandle controlNode){
+    double closeLookAlt, waypointPositionAccuracy;
+    controlNode.getParam("/3color/closeLookAlt", closeLookAlt);
+    controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
+    geometry_msgs::Point waypoint;
+    waypoint.x = waypointToTree.pos1;
+    waypoint.y = waypointToTree.pos2;
+    waypoint.z = closeLookAlt;
+    set_local_pos_pub.publish(waypoint);
+    if(pointDistance(waypoint) > dropWaypointAccuracy) {
+        return MissionState::takeCloseLook;
+    } else {
+        needPhoto = true;
+        ros::spinOnce();
+        ros::Duration(2).sleep();
+        waypoint_reach_pub.publish(waypointToTree);
+        object_photo_pub.publish(yoloImage);
+        needPhoto = false;
+        ros::spinOnce();
+        return MissionState::goToNextObject;
+    }
+
 }
 
 MissionState goHome(){

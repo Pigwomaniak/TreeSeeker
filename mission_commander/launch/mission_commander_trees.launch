@@ -1,4 +1,5 @@
 <launch>
     <rosparam command="load" file="$(find mission_commander)/config/trees.yaml" />
     <node pkg="mission_commander" type="mission_commander_trees" name="mission_commander_trees" output="screen" />
+    <node pkg="mission_commander" type="image_saver_node.py" name="image_saver" output="screen" />
 </launch>

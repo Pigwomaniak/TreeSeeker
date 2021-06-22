@@ -15,7 +15,7 @@
 #include <geometry_msgs/Point.h>
 #include <std_msgs/String.h>
 #include <ball_droper_msgs/drop_ball.h>
-
+#include <sensor_msgs/Image.h>
 
 #define FLY_ALT 30
 #define DROP_BALL_ALT 5
@@ -45,8 +45,8 @@ MissionState getToStartPlace(const ros::NodeHandle& controlNode);
 MissionState getToStartPlace(geometry_msgs::Point startingPoint);
 MissionState firstLookAtField(const ros::NodeHandle& controlNode);
 MissionState firstLookAtField(geometry_msgs::Point endPoint);
-MissionState goToNextObject(ros::NodeHandle controlNode);
-MissionState dropBall(ros::NodeHandle controlNode);
+MissionState goToNextObject(const ros::NodeHandle& controlNode);
+MissionState dropBall(const ros::NodeHandle& controlNode);
 MissionState goHome();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode);
 double pointDistance(const geometry_msgs::Point& destinationPoint);

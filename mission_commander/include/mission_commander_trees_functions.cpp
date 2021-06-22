@@ -9,6 +9,8 @@ nav_msgs::Odometry local_position;
 trajectory_planer_msgs::TrajectoryPlaner waypointToTree;
 mavros_msgs::State mavState;
 mavros_msgs::ExtendedState extendedMavState;
+sensor_msgs::Image yoloImage;
+bool needPhoto = false;
 
 ros::Publisher set_local_pos_pub;
 ros::Publisher set_heading_pub;
@@ -16,12 +18,14 @@ ros::Publisher set_offset_pub;
 ros::Publisher set_mode_pub;
 ros::Publisher set_global_pos_pub;
 ros::Publisher waypoint_reach_pub;
+ros::Publisher object_photo_pub;
 
 ros::Subscriber global_pose_sub;
 ros::Subscriber local_pose_sub;
 ros::Subscriber trajectory_planer_sub;
 ros::Subscriber mav_state_sub;
 ros::Subscriber extended_mav_state_sub;
+ros::Subscriber yolo_Photo_sub;
 
 ros::ServiceClient ball_droper_client;
 
@@ -44,9 +48,13 @@ void ext_mav_state_cb(const mavros_msgs::ExtendedState::ConstPtr& msg){
     extendedMavState = *msg;
 }
 
+void yolo_photo_cb(const sensor_msgs::Image::ConstPtr& msg){
+    if(needPhoto) yoloImage = *msg;
+}
 
 void init_publisher_subscriber(ros::NodeHandle controlNode){
     // Publishers
+    object_photo_pub = controlNode.advertise<sensor_msgs::Image>("/mission_commander/object_photo", 1);
     set_local_pos_pub = controlNode.advertise<geometry_msgs::Point>("/drone_ridder/set_local_position", 1);
     set_heading_pub = controlNode.advertise<std_msgs::Float64>("/drone_ridder/set_heading", 1);
     set_offset_pub = controlNode.advertise<geometry_msgs::Point>("/drone_ridder/set_position_offset", 1);
@@ -183,7 +191,7 @@ MissionState firstLookAtField(geometry_msgs::Point endPoint){
     }
 }
 
-MissionState goToNextObject(ros::NodeHandle controlNode){
+MissionState goToNextObject(const ros::NodeHandle& controlNode){
     double waypointPositionAccuracy;
     double lowFlyAlt;
     controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
@@ -207,10 +215,10 @@ MissionState goToNextObject(ros::NodeHandle controlNode){
     return MissionState::goToNextTree;
 }
 
-MissionState dropBall(ros::NodeHandle controlNode){
+MissionState dropBall(const ros::NodeHandle& controlNode){
     double dropBallAlt;
     double dropWaypointAccuracy;
-    controlNode.getParam("/trees/dropBallAlt", dropBallAlt);
+    controlNode.getParam("/trees/closeLookAlt", dropBallAlt);
     controlNode.getParam("/trees/dropWaypointAccuracy", dropWaypointAccuracy);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
@@ -230,9 +238,12 @@ MissionState dropBall(ros::NodeHandle controlNode){
         }
         ball_droper_client.call(ball_srv);
         ROS_INFO("Ball dropped");
+        needPhoto = true;
         ros::spinOnce();
         ros::Duration(2).sleep();
         waypoint_reach_pub.publish(waypointToTree);
+        object_photo_pub.publish(yoloImage);
+        needPhoto = false;
         ros::spinOnce();
     }
     return MissionState::goToNextTree;

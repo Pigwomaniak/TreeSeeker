@@ -15,6 +15,7 @@
 #include <geometry_msgs/Point.h>
 #include <std_msgs/String.h>
 #include <stack>
+#include <sensor_msgs/Image.h>
 
 
 
@@ -36,6 +37,7 @@ void local_pos_cb(const nav_msgs::Odometry::ConstPtr& msg);
 void trajectory_planer_cb(const trajectory_planer_msgs::TrajectoryPlaner::ConstPtr& msg);
 void mav_state_cb(const mavros_msgs::State::ConstPtr& msg);
 void init_publisher_subscriber(ros::NodeHandle controlNode);
+
 MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::Odometry* takeOffPoint);
 MissionState scanField(ros::NodeHandle controlNode, std::stack<sensor_msgs::NavSatFix>* waypoints);
 MissionState goToNextObject(ros::NodeHandle controlNode);
