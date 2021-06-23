@@ -4,7 +4,6 @@
     <node pkg="drone_ridder" type="drone_ridder" name="drone_ridder" output="screen" />
     <include file="$(find object_global_localizator)/launch/object_global_localizator_sim.launch"/>
     <include file="$(find trajectory_planer)/launch/trajectory_planer_trees.launch"/>
-    <!--><-->
     <include file="$(find darknet_ros)/launch/darknet_ros.launch" />
 
 </launch>
