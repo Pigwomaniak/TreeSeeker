@@ -194,8 +194,8 @@ MissionState firstLookAtField(geometry_msgs::Point endPoint){
 MissionState goToNextObject(const ros::NodeHandle& controlNode){
     double waypointPositionAccuracy;
     double lowFlyAlt;
-    controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
-    controlNode.getParam("/3color/lowFlyAlt", lowFlyAlt);
+    controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
+    controlNode.getParam("/trees/lowFlyAlt", lowFlyAlt);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
@@ -218,8 +218,9 @@ MissionState goToNextObject(const ros::NodeHandle& controlNode){
 MissionState dropBall(const ros::NodeHandle& controlNode){
     double dropBallAlt;
     double dropWaypointAccuracy;
-    controlNode.getParam("/trees/closeLookAlt", dropBallAlt);
+    controlNode.getParam("/trees/dropBallAlt", dropBallAlt);
     controlNode.getParam("/trees/dropWaypointAccuracy", dropWaypointAccuracy);
+    trajectory_planer_msgs::TrajectoryPlaner waypointToTreeOld = waypointToTree;
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
@@ -228,6 +229,10 @@ MissionState dropBall(const ros::NodeHandle& controlNode){
     if(pointDistance(waypoint) > dropWaypointAccuracy){
         return MissionState::dropBall;
     } else{
+        if(waypointToTreeOld.updateCounter + 10 < waypointToTree.updateCounter){
+            waypoint_reach_pub.publish(waypointToTreeOld);
+            return MissionState::goToNextTree;
+        }
         ball_droper_msgs::drop_ball ball_srv;
         ros::Duration(2).sleep();
         if(waypointToTree.idClassObject == 2){

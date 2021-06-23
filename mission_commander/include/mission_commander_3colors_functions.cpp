@@ -146,9 +146,14 @@ MissionState takeCloseLook(ros::NodeHandle controlNode){
     if(pointDistance(waypoint) > dropWaypointAccuracy) {
         return MissionState::takeCloseLook;
     } else {
+        trajectory_planer_msgs::TrajectoryPlaner waypointToTreeOld = waypointToTree;
         needPhoto = true;
         ros::spinOnce();
         ros::Duration(2).sleep();
+        if(waypointToTreeOld.updateCounter + 10 < waypointToTree.updateCounter){
+            waypoint_reach_pub.publish(waypointToTreeOld);
+            return MissionState::goToNextObject;
+        }
         waypoint_reach_pub.publish(waypointToTree);
         object_photo_pub.publish(yoloImage);
         needPhoto = false;
