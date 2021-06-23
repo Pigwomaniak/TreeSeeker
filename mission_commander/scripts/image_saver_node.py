@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # Using this CvBridge Tutorial for converting
 # ROS images to OpenCV2 images
 # http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython
