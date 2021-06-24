@@ -91,15 +91,15 @@ bool checkReadFlag()
 
 void processReadPoints()
 {
-    for (const auto & pointObj : objGlobPos.ObjectsGlobalPositions) 
+    for (const auto & pointObj : objGlobPos.ObjectsGlobalPositions) //wykonaj czynnosci dla wszystkich obiektow odebranych z object_global_localizator
     {
-        unsigned short id = pointObj.idClassObject;
-        double distance = pointObj.distanceDroneToObject;
+        unsigned short id = pointObj.idClassObject;  // pobierz id obiektu
+        double distance = pointObj.distanceDroneToObject; // pobierz odleglosc do obiektu
 
 #if MODE == 0
-        Point p (pointObj.globalPositionLocal.x, pointObj.globalPositionLocal.y);
+        Point p (pointObj.globalPositionLocal.x, pointObj.globalPositionLocal.y); // stworz punkt p o wspolrzednych lokalnych
 #else
-        Point p (pointObj.latitude, pointObj.longitude);
+        Point p (pointObj.latitude, pointObj.longitude); // stworz punkt p o wspolrzednych GPS
 #endif
 
         bool succes = false;

@@ -78,7 +78,7 @@ void localizeObjects(ros::NodeHandle controlNode){
         double xScalarObj = tan(gamma) * cos(beta) * zScalarObj;
         scalarToObjCenter_Camera << xScalarObj, yScalarObj, zScalarObj;
         Eigen::Matrix<double, 3, 1> scalarToObjCenter_Global;
-        scalarToObjCenter_Global = droneRotation * cameraRotation * scalarToObjCenter_Camera;
+        scalarToObjCenter_Global = (droneRotation * (cameraRotation * scalarToObjCenter_Camera));
         double scale = abs(local_position.pose.pose.position.z / scalarToObjCenter_Global[2]);
         Eigen::Matrix<double, 3, 1> objectLocalPositionVector;
         objectLocalPositionVector = scalarToObjCenter_Global * scale;
@@ -89,7 +89,7 @@ void localizeObjects(ros::NodeHandle controlNode){
                                                           + pow(objectLocalPositionVector[1], 2)
                                                           + pow(objectLocalPositionVector[2], 2));
         objectGlobalPosition.altitude = global_position.altitude - local_position.pose.pose.position.z;
-        objectGlobalPosition.longitude = global_position.longitude + (360.0 / 40075000 / cos(global_position.latitude * M_PI / 360) * objectLocalPositionVector[0]);
+        objectGlobalPosition.longitude = global_position.longitude + (360.0 / (40075000 * cos(global_position.latitude * M_PI / 180)) * objectLocalPositionVector[0]);
         objectGlobalPosition.latitude = global_position.latitude + objectLocalPositionVector[1] * MERES_TO_LATITUDE;
 
         outMessage.ObjectsGlobalPositions.push_back(objectGlobalPosition);

@@ -290,8 +290,8 @@ geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global,
 sensor_msgs::NavSatFix localToGlobalPosition(const geometry_msgs::Point& local){
     sensor_msgs::NavSatFix global;
     global.latitude = ((local.y - local_position.pose.pose.position.y) * MERES_TO_LATITUDE) + global_position.latitude;
-    global.longitude = ((local.x - local_position.pose.pose.position.x) * (360.0 / 40075000 / cos(global_position.latitude * M_PI / 180))) + global_position.longitude;
-    global.altitude = local.z +global_position.altitude - local_position.pose.pose.position.z;
+    global.longitude = ((local.x - local_position.pose.pose.position.x) * (360.0 / (40075000 * cos(global_position.latitude * M_PI / 180)))) + global_position.longitude;
+    global.altitude = local.z + global_position.altitude - local_position.pose.pose.position.z;
     return global;
 }
 
@@ -315,7 +315,7 @@ double pointDistance(const sensor_msgs::NavSatFix& dest){
     double dlo = dest.longitude - global_position.longitude;
     double dalt = dest.altitude - global_position.altitude;
     double dx = dla / MERES_TO_LATITUDE;
-    double dy = dlo / (360.0 / 40075000 / cos(global_position.latitude * M_PI / 180));
+    double dy = dlo / (360.0 / (40075000 * cos(global_position.latitude * M_PI / 180)));
     double dz = dalt;
     ROS_INFO("error pos: %f, %f, %f", dx, dy, dz);
     return (sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2)));

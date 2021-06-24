@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
     {
     	ros::spinOnce();
 
-    	if(checkReadFlag())
+    	if(checkReadFlag()) //jesli sa dane z object_global_localizator
     	{
-    		processReadPoints();
+    		processReadPoints(); 
     		findTrajectory(trajectory_planer);
     	}
     	else
