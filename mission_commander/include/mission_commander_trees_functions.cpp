@@ -67,6 +67,7 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     trajectory_planer_sub = controlNode.subscribe("/trajectory_planer/next_waypoint", 1, trajectory_planer_cb);
     mav_state_sub = controlNode.subscribe("/mavros/state", 1, mav_state_cb);
     extended_mav_state_sub = controlNode.subscribe("/mavros/extended_state", 1, ext_mav_state_cb);
+    yolo_Photo_sub = controlNode.subscribe("/darknet_ros/detection_image", 1, yolo_photo_cb);
     // Services
     ball_droper_client = controlNode.serviceClient<ball_droper_msgs::drop_ball>("drop_ball");
 }
