@@ -35,7 +35,7 @@ def image_callback(msg):
     else:
         # Save your OpenCV2 image as a jpeg
         path = '~/mission_photo'
-        cv2.imwrite(os.path.join(path, '{:10d}'.format(image_counter) + '.jpeg'), cv2_img)
+        cv2.imwrite('{:10d}'.format(image_counter) + '.jpeg', cv2_img)
 
 
 rospy.init_node('image_saver')

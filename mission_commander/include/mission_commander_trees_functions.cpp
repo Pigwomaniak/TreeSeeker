@@ -236,7 +236,7 @@ MissionState dropBall(const ros::NodeHandle& controlNode){
     if(pointDistance(waypoint) > dropWaypointAccuracy){
         return MissionState::dropBall;
     } else{
-        if(waypointToTreeOld.updateCounter + 10 < waypointToTree.updateCounter){
+        if(waypointToTreeOld.updateCounter + 10 > waypointToTree.updateCounter){
             waypoint_reach_pub.publish(waypointToTreeOld);
             return MissionState::goToNextTree;
         }
