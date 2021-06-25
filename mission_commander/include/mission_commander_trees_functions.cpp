@@ -207,6 +207,10 @@ MissionState goToNextObject(const ros::NodeHandle& controlNode){
             ROS_INFO("No more trees, going home");
             return MissionState::goHome;
     }
+    if(waypointToTree.updateCounter < 5){
+        waypoint_reach_pub.publish(waypointToTree);
+        return MissionState::goToNextTree;
+    }
     if(pointDistance(waypoint) > waypointPositionAccuracy){
         set_global_pos_pub.publish(globalPosToSend(localToGlobalPosition(waypoint),aslToWGS83));
         //set_local_pos_pub.publish(waypoint);
@@ -236,7 +240,7 @@ MissionState dropBall(const ros::NodeHandle& controlNode){
     if(pointDistance(waypoint) > dropWaypointAccuracy){
         return MissionState::dropBall;
     } else{
-        if(waypointToTreeOld.updateCounter + 10 > waypointToTree.updateCounter){
+        if(waypointToTreeOld.updateCounter > waypointToTree.updateCounter){
             waypoint_reach_pub.publish(waypointToTreeOld);
             return MissionState::goToNextTree;
         }
