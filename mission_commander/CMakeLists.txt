@@ -213,3 +213,6 @@ include_directories(
 
 add_executable(mission_commander_trees src/mission_commander_trees.cpp include/mission_commander_trees_functions.cpp)
 target_link_libraries(mission_commander_trees ${catkin_LIBRARIES})
+
+add_executable(mission_commander_3color src/mission_commander_3colors.cpp include/mission_commander_3colors_functions.cpp)
+target_link_libraries(mission_commander_3color ${catkin_LIBRARIES})

@@ -120,7 +120,7 @@ void processReadPoints()
         {
 
 #if MODE == 0
-        double radius = 2.0;
+        double radius = 3.0;
 #else
         double radius = 0.001;
 #endif
