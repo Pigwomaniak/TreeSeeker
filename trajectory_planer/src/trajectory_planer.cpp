@@ -27,19 +27,19 @@ int main(int argc, char** argv) {
     {
     	ros::spinOnce();
 
-    	if(checkReadFlag()) //jesli sa dane z object_global_localizator
+    	if(checkReadFlag()) //jesli sa dane o obiektach z object_global_localizator
     	{
-    		processReadPoints(); 
+    		processReadPoints(); //pobierz dane o obiektach i zaktualizuj liste wykrytych obiektow
     		findTrajectory(trajectory_planer);
     	}
     	else
     	{
     		errorCounter++;
     	}
-        setVisitedPoint();
-    	sendOutMessage();
+        setVisitedPoint(); //oznacz obiekty juz odwiedzone
+    	sendOutMessage(); //publikuj wiadomosd o wykrytych obiektach
 
-    	printInfo();
+    	printInfo(); //
 
 
     	resetReadFlag();
