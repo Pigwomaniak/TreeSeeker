@@ -70,7 +70,7 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     extended_mav_state_sub = controlNode.subscribe("/mavros/extended_state", 1, ext_mav_state_cb);
     yolo_Photo_sub = controlNode.subscribe("/darknet_ros/detection_image", 1, yolo_photo_cb);
     // Services
-    ball_droper_client = controlNode.serviceClient<ball_droper_msgs::drop_ball>("drop_ball");
+    //ball_droper_client = controlNode.serviceClient<ball_droper_msgs::drop_ball>("drop_ball");
 }
 
 MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::Odometry* takeOffPoint){
@@ -82,24 +82,26 @@ MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::O
     *takeOffPointWGS84 = global_position;
     *takeOffPoint = local_position;
     ROS_INFO("ARMED");
-    return MissionState::gettingOnMissionStartPlace;
+    return MissionState::scanField;
 }
 MissionState scanField(ros::NodeHandle controlNode, std::stack<sensor_msgs::NavSatFix>* waypoints){
-    wsensor_msgs::NavSatFix waypoint;
-    geographic_msgs::GeoPoseStamped waypointOut;
+    sensor_msgs::NavSatFix waypoint;
+    //geographic_msgs::GeoPoseStamped waypointOut;
     double waypointPositionAccuracy, aslToWGS83, flyAlt;
     controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
     controlNode.getParam("/3color/aslToWGS83", aslToWGS83);
     controlNode.getParam("/3color/flyAlt", flyAlt);
+    ROS_INFO("number of waypoints: %lu", waypoints->size());
     if (!waypoints->empty()){
-        waypoint = *waypoints->top();
-        if(pointDistance(waypoint) > waypointPositionAccuracy){
-            double heading;
-            heading = headingToPoint(globalToLocalPosition(waypoint));
-            waypointOut.pose.position.longitude = waypoint.longitude;
-            waypointOut.pose.position.latitude = waypoint.latitude;
-            waypointOut.pose.position.altitude = waypoint.altitude + aslToWGS83;
-            set_global_pos_pub.publish(waypointOut);
+        waypoint = waypoints->top();
+        ROS_INFO("Distance to point: %f", pointDistance(globalToLocalPosition(waypoint, controlNode)));
+        if(pointDistance(globalToLocalPosition(waypoint, controlNode)) > waypointPositionAccuracy){
+            std_msgs::Float64 heading;
+            heading.data = headingToPoint(globalToLocalPosition(waypoint, controlNode));
+            //waypointOut.pose.position.longitude = waypoint.longitude;
+            //waypointOut.pose.position.latitude = waypoint.latitude;
+            //waypointOut.pose.position.altitude = waypoint.altitude + aslToWGS83;
+            set_global_pos_pub.publish(globalPosToSend(waypoint, aslToWGS83));
             set_heading_pub.publish(heading);
         } else {
             waypoints->pop();
@@ -113,8 +115,10 @@ MissionState scanField(ros::NodeHandle controlNode, std::stack<sensor_msgs::NavS
 MissionState goToNextObject(ros::NodeHandle controlNode){
     double waypointPositionAccuracy;
     double lowFlyAlt;
-    controlNode.getParam("/trees/waypointPositionAccuracy", waypointPositionAccuracy);
-    controlNode.getParam("/trees/lowFlyAlt", lowFlyAlt);
+    double aslToWGS83;
+    controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
+    controlNode.getParam("/3color/lowFlyAlt", lowFlyAlt);
+    controlNode.getParam("/3color/aslToWGS83", aslToWGS83);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
@@ -123,8 +127,13 @@ MissionState goToNextObject(ros::NodeHandle controlNode){
             ROS_INFO("No more trees, going home");
             return MissionState::goHome;
     }
+    if(waypointToTree.updateCounter < 5){
+        waypoint_reach_pub.publish(waypointToTree);
+        return MissionState::goToNextObject;
+    }
     if(pointDistance(waypoint) > waypointPositionAccuracy){
-        set_local_pos_pub.publish(waypoint);
+        set_global_pos_pub.publish(globalPosToSend(localToGlobalPosition(waypoint), aslToWGS83));
+        //set_local_pos_pub.publish(waypoint);
         //ROS_INFO("going to %f, %f, %f", waypoint.x, waypoint.y, waypoint.z);
     } else{
         ROS_INFO("Tree reach: x: %f, y: %f", waypoint.x, waypoint.y);
@@ -136,14 +145,16 @@ MissionState goToNextObject(ros::NodeHandle controlNode){
 
 MissionState takeCloseLook(ros::NodeHandle controlNode){
     double closeLookAlt, waypointPositionAccuracy;
+    double aslToWGS83;
     controlNode.getParam("/3color/closeLookAlt", closeLookAlt);
     controlNode.getParam("/3color/waypointPositionAccuracy", waypointPositionAccuracy);
+    controlNode.getParam("/3color/aslToWGS83", aslToWGS83);
     geometry_msgs::Point waypoint;
     waypoint.x = waypointToTree.pos1;
     waypoint.y = waypointToTree.pos2;
     waypoint.z = closeLookAlt;
-    set_local_pos_pub.publish(waypoint);
-    if(pointDistance(waypoint) > dropWaypointAccuracy) {
+    set_global_pos_pub.publish(globalPosToSend(localToGlobalPosition(waypoint),aslToWGS83));
+    if(pointDistance(waypoint) > waypointPositionAccuracy) {
         return MissionState::takeCloseLook;
     } else {
         trajectory_planer_msgs::TrajectoryPlaner waypointToTreeOld = waypointToTree;
@@ -179,10 +190,18 @@ MissionState goHome(){
     return MissionState::goHome;
 }
 
+sensor_msgs::NavSatFix localToGlobalPosition(const geometry_msgs::Point& local){
+    sensor_msgs::NavSatFix global;
+    global.latitude = ((local.y - local_position.pose.pose.position.y) * MERES_TO_LATITUDE) + global_position.latitude;
+    global.longitude = ((local.x - local_position.pose.pose.position.x) * (360.0 / (40075000 * cos(global_position.latitude * M_PI / 180)))) + global_position.longitude;
+    global.altitude = local.z + global_position.altitude - local_position.pose.pose.position.z;
+    return global;
+}
+
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode){
     geometry_msgs::Point local;
     double aslToWGS83;
-    controlNode.getParam("/trees/aslToWGS83", aslToWGS83);
+    controlNode.getParam("/3color/aslToWGS83", aslToWGS83);
     local.z = global.altitude - global_position.altitude + local_position.pose.pose.position.z; // + aslToWGS83;
     local.x = local_position.pose.pose.position.x + (global.longitude - global_position.longitude) / (360.0 / 40075000 / cos(global_position.latitude * M_PI / 180));
     local.y = local_position.pose.pose.position.y + (global.latitude - global_position.latitude) / MERES_TO_LATITUDE;
@@ -190,12 +209,20 @@ geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global,
     return local;
 }
 
+geographic_msgs::GeoPoseStamped globalPosToSend(const sensor_msgs::NavSatFix& positionIn, const double& aslToWGS83){
+    geographic_msgs::GeoPoseStamped positionOut;
+    positionOut.pose.position.latitude = positionIn.latitude;
+    positionOut.pose.position.longitude = positionIn.longitude;
+    positionOut.pose.position.altitude = positionIn.altitude + aslToWGS83;
+    return positionOut;
+}
 double pointDistance(const geometry_msgs::Point& destinationPoint){
     double dx = destinationPoint.x - local_position.pose.pose.position.x;
     double dy = destinationPoint.y - local_position.pose.pose.position.y;
     double dz = destinationPoint.z - local_position.pose.pose.position.z;
     return (sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2)));
 }
+
 double pointDistance(const sensor_msgs::NavSatFix& dest){
     double dla = dest.latitude - global_position.latitude;
     double dlo = dest.longitude - global_position.longitude;
@@ -220,7 +247,8 @@ double headingToPoint(const geometry_msgs::Point& destinationPoint){
     return heading;
 }
 
-int generateWaypoints(std::stack<sensor_msgs::NavSatFix>* waypoints, ros::NodeHandle controlNode){
+MissionState generateWaypoints(std::stack<sensor_msgs::NavSatFix>* waypoints, ros::NodeHandle controlNode){
+    if (global_position.altitude == 0) return MissionState::generateWaypoints;
     double pointALo, pointALa, pointBLo, pointBLa, pointCLo, pointCLa, pointDLo, pointDLa;
     int numberOfPaths;
     double flyAlt;
@@ -266,9 +294,11 @@ int generateWaypoints(std::stack<sensor_msgs::NavSatFix>* waypoints, ros::NodeHa
     }
     int waypointsNumber = 0;
     while (!waypointsReverse.empty()){
-        waypoint = waypointsReverse.pop();
+        waypoint = waypointsReverse.top();
         waypoints->push(waypoint);
+        waypointsReverse.pop();
         waypointsNumber++;
     }
-    return waypointsNumber;
+    ROS_INFO("Waypoints generated");
+    return MissionState::waitingForArm;
 }

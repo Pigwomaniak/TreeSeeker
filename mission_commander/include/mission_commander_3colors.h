@@ -25,6 +25,7 @@
 
 enum class MissionState{
     standby,
+    generateWaypoints,
     waitingForArm,
     scanField,
     goToNextObject,
@@ -44,7 +45,9 @@ MissionState goToNextObject(ros::NodeHandle controlNode);
 MissionState takeCloseLook(ros::NodeHandle controlNode);
 MissionState goHome();
 geometry_msgs::Point globalToLocalPosition(const sensor_msgs::NavSatFix& global, const ros::NodeHandle& controlNode);
-int generateWaypoints(std::stack<sensor_msgs::NavSatFix>* waypoints, ros::NodeHandle controlNode);
+sensor_msgs::NavSatFix localToGlobalPosition(const geometry_msgs::Point& local);
+geographic_msgs::GeoPoseStamped globalPosToSend(const sensor_msgs::NavSatFix& positionIn, const double& aslToWGS83);
+MissionState generateWaypoints(std::stack<sensor_msgs::NavSatFix>* waypoints, ros::NodeHandle controlNode);
 double pointDistance(const geometry_msgs::Point& destinationPoint);
 double headingToPoint(const geometry_msgs::Point& destinationPoint);
 
