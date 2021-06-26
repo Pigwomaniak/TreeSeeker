@@ -5,22 +5,12 @@
 
 class Point{
 public:
-<<<<<<< HEAD
     Point(double p1, double p2) : pos1(p1),pos2(p2){};
     double getPos1()const{return pos1;}; //zwraca pozycje 1
     double getPos2()const{return pos2;}; //zwraca pozycje 2
     void setPos(double p1, double p2) { pos1 = p1;pos2 = p2;}; //przypisuje pozycje punktu do zmiennych prywatnych
     double countDistance(const Point& p)const {return pow(p.pos1-pos1,2) + pow(p.pos2-pos2,2); };
     //zwraca kwadrat roznicy polozenia od punktu do punktu
-=======
-	Point(double p1, double p2) : pos1(p1),pos2(p2){};
-	double getPos1()const{return pos1;}; //zwraca pozycje 1
-	double getPos2()const{return pos2;}; //zwraca pozycje 2
-	void setPos(double p1, double p2) { pos1 = p1;pos2 = p2;}; //przypisuje pozycje punktu do zmiennych prywatnych
-	double countDistance(const Point& p)const {return pow(p.pos1-pos1,2) + pow(p.pos2-pos2,2); };
-	//zwraca kwadrat roznicy polozenia od punktu do punktu
->>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
-
 private:
     double pos1, pos2;
 };
@@ -40,7 +30,6 @@ public:
     unsigned short getUpdateCounter()const {return updateCounter;};
 
 private:
-<<<<<<< HEAD
     unsigned short id;
     std::vector<unsigned short> id_list;
     Point sum;
@@ -48,14 +37,5 @@ private:
     const double radius;
     bool visited;
     unsigned short updateCounter;
-=======
-	unsigned short id;
-	std::vector<size_t> id_list;
-	Point sum;
-	double num;
-	const double radius;
-	bool visited;
-	unsigned short updateCounter;
->>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
 };
 
