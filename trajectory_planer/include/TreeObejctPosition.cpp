@@ -1,19 +1,30 @@
 #include <TreeObejctPosition.h>
 
+<<<<<<< HEAD
 TreeObejctPosition::TreeObejctPosition(unsigned short id, Point sum, double radius, double num) : id(id), sum(sum),  radius(radius), num(num), visited(0), updateCounter(0)
 {
     this->sum.setPos(sum.getPos1()*num,sum.getPos2()*num); //wspolrzedne puktow z infomacja o odleglosci od drona
     this->id_list.push_back(this->id);
+=======
+TreeObejctPosition::TreeObejctPosition(unsigned short id, Point sum, double radius, double num) TreeObejctPosition: id(id),sum(sum),  radius(radius), num(num),visited(0), updateCounter(0)
+{
+    this->sum.setPos(sum.getPos1()*num,sum.getPos2()*num); //wspolrzedne puktow z infomacja o odleglosci od drona
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
 }
 
 bool TreeObejctPosition::addIfInclude (const Point& p, unsigned short idp, double weigth)
 {
+<<<<<<< HEAD
     if(ifInclude(p)) //jesli nowy punkt nalezy do obiektu i id obiektu sie zgadza z nowo wykrytym
+=======
+    if(ifInclude(p)) //jesli nowy punkt nalezy do obiektu i id obiektu sie zgadza z nowo wykrytym 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
     {
         //dodaj nowa pozycje z infomacja o polozeniu od drona do reszty punktow
         sum.setPos(sum.getPos1()+(p.getPos1()*weigth),sum.getPos2()+(p.getPos2()*weigth));
         num+=weigth; //zwieksz wspolna wage o wage nowego punktu
         updateCounter++; //zwieksz licznik iformujacy ile razy dany obiekt by obserwowany
+<<<<<<< HEAD
         id_list.push_back(idp);
         size_t number_of_id1 = 0;
         size_t number_of_id2 = 0;
@@ -35,6 +46,27 @@ bool TreeObejctPosition::addIfInclude (const Point& p, unsigned short idp, doubl
             }
         }
 
+=======
+        id_list.push_back(idp); 
+        size_t number_of_id1 = 0;
+        size_t number_of_id2 = 0;
+        size_t number_of_id3 = 0;
+        for(size_t i = 0; i < id_list.size(); i++)
+        {
+            if(id_list(i)==1)
+            {
+                number_of_id1++
+            }
+            if(id_list(i)==2)
+            {
+                number_of_id2++
+            }
+            if(id_list(i)==3)
+            {
+                number_of_id3++
+            }
+        }
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
         if(number_of_id1 > number_of_id2 && number_of_id1 > number_of_id3)
         {
             id=1;
@@ -70,5 +102,9 @@ bool TreeObejctPosition::ifInclude (const Point& p)
 
 Point TreeObejctPosition::getPoint()const
 {
+<<<<<<< HEAD
     return Point(sum.getPos1()/num, sum.getPos2()/num); // zwroc punkt o wspolrzednych
+=======
+    return Point(sum.getPos1()/num, sum.getPos2()/num); // zwroc punkt o wspolrzednych 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
 }

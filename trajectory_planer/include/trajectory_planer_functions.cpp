@@ -145,13 +145,21 @@ void findTrajectory(ros::NodeHandle controlNode)
     controlNode.getParam("/trajectory_planer/idToGo3", idToGo3); //pobierz id wykrywanego obiektu
 #if MODE == 0
     // pozycja dona na podstawie wspolrzednych lokalnych
+<<<<<<< HEAD
     Point dronePos(local_position.pose.pose.position.x,local_position.pose.pose.position.y);
+=======
+    Point dronePos(local_position.pose.pose.position.x,local_position.pose.pose.position.y); 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
 #else
     // pozycja drona na podstawie wspolrzednych GPS
     Point dronePos(global_position.latitude,global_position.longitude);
 #endif
 
+<<<<<<< HEAD
     //jesli pozycja drona wzgledem poprzedniej jest wieksza lub rozna niz promien wykrywania obiektu
+=======
+    //jesli pozycja drona wzgledem poprzedniej jest wieksza lub rozna niz promien wykrywania obiektu 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
     if(dronePos.countDistance(droneOldPos)>= pow(treePosVec[0].getRadius(),2))
     {
         droneOldPos = dronePos; //przypisz aktualna pozycje jako stara
@@ -163,7 +171,11 @@ void findTrajectory(ros::NodeHandle controlNode)
     if(trajectoryRecalculateFlag)
     {
         trajectoryRecalculateFlag = false; //ustaw flage by nie obliczac ponownie trajektorii
+<<<<<<< HEAD
         std::vector<Point> points; //stworz liste punktow
+=======
+        std::vector<Point> points; //stworz liste punktow 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
 
         for(const auto& treePos:treePosVec) //wykonaj czynnosci dla wszystkich znalezionych obiektow
         {
@@ -172,7 +184,7 @@ void findTrajectory(ros::NodeHandle controlNode)
             {
                 points.push_back(treePos.getPoint()); //dodaj punkt do listy punktow
             }
-        }
+        } 
 
         //jesli lista punktow jest pusta
         if (points.size()==0) {
@@ -181,7 +193,11 @@ void findTrajectory(ros::NodeHandle controlNode)
         }
 
         //storz liste
+<<<<<<< HEAD
         std::vector<size_t> trajectory = findBestTrajectory(points,dronePos);
+=======
+        std::vector<size_t> trajectory = findBestTrajectory(points,dronePos); 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
 
         Point goalPoint = points[trajectory[0]];
         for(size_t i = 0; i < treePosVec.size(); i++)
@@ -238,7 +254,11 @@ void findLoverCost (const std::vector<Point>& points, std::vector<size_t>& v, do
         //wykonaj czynnosci tyle razy ile wynosi liczba punktow
         for(size_t i = 0; i < points.size(); i++)
         {
+<<<<<<< HEAD
             //jesli nie znajdzie w zbiorze v wartosci i
+=======
+            //jesli nie znajdzie w zbiorze v wartosci i  
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
             if(std::find(v.begin(), v.end(), i) == v.end())
             {
                 Point last = points[*(v.end()-1)]; //przypisz punkt jako ostatni ze zbioru v
@@ -272,8 +292,13 @@ void sendOutMessage()
 #endif
 
         Point p = treePosVec[goalPointId].getPoint(); //stworz punkt o wspolrzednych wytypowanego obiektu
+<<<<<<< HEAD
         outMessage.pos1 = p.getPos1(); //przypisz pozycje 1 wytypowanego obiektu do wiadomosci
         outMessage.pos2 = p.getPos2(); //przypisz pozycje 2 wytypowanego obiektu do wiadomosci
+=======
+        outMessage.pos1 = p.getPos1(); //przypisz pozycje 1 wytypowanego obiektu do wiadomosci 
+        outMessage.pos2 = p.getPos2(); //przypisz pozycje 2 wytypowanego obiektu do wiadomosci 
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
         outMessage.idClassObject = treePosVec[goalPointId].getId(); //przypisz id obiektu do wiadomosci
         outMessage.updateCounter = treePosVec[goalPointId].getUpdateCounter(); //przypisz ilosc wykrytych razy obiektu do wiadomosci
 
@@ -295,9 +320,15 @@ void printInfo()
         ROS_INFO("Actual Points");
         for(const auto& treePos:treePosVec) //wykonaj czynnosci dla wszystkich wykrytych obiekt
         {
+<<<<<<< HEAD
             //stworz punkt o wspolrzednych badanego obiektu
             Point p = treePos.getPoint();
             ROS_INFO("ID %d Goal p1: %f p2: %f",treePos.getId(), p.getPos1(), p.getPos2());
+=======
+                //stworz punkt o wspolrzednych badanego obiektu
+                Point p = treePos.getPoint();
+                ROS_INFO("ID %d Goal p1: %f p2: %f",treePos.getId(), p.getPos1(), p.getPos2());
+>>>>>>> 8d557f319d307d7094a81d71455c95f9a0d897b2
         }
         ROS_INFO("Goal has index %d",int(goalPointId));
         Point p = treePosVec[goalPointId].getPoint(); //stworz punkt o wspolrzednych wybranego obiektu
