@@ -210,8 +210,12 @@ def gps_callback(msg):
     longitude = msg.longitude
     global altitude
     altitude = msg.altitude
-    gps_rpy('uav', VEHICLE_ID, x_lat, y_long, z_alt, *euler)
-
+    global doc
+    doc = gps_rpy('uav', VEHICLE_ID, x_lat, y_long, z_alt, *euler)
+    try:
+        _id = database['gps_rpy].insert_one(doc)
+    except Exception as e:
+        rospy.loginfo(e)
 
 def pose_callback(msg):
     global pose_initialized, euler
@@ -228,14 +232,18 @@ def pose_callback(msg):
 def founded_object_cb(msg):
     global latitude
     global longitude
+    global doc2
     tol_detect(msg.data, latitude, longitude, bytes("hellothere", 'utf-8'))
     if msg.data == "square":
-        col_shape(msg.data, color="beige", surface=1, gps_latitude=latitude, gps_longitude=longitude)
+        doc2 = col_shape(msg.data, color="beige", surface=1, gps_latitude=latitude, gps_longitude=longitude)
     if msg.data == "triangle":
-        col_shape(msg.data, color="brown", surface=1, gps_latitude=latitude, gps_longitude=longitude)
+        doc2 = col_shape(msg.data, color="brown", surface=1, gps_latitude=latitude, gps_longitude=longitude)
     if msg.data == "circle":
-        col_shape(msg.data, color="beige", surface=1, gps_latitude=latitude, gps_longitude=longitude)
-
+        doc2 = col_shape(msg.data, color="beige", surface=1, gps_latitude=latitude, gps_longitude=longitude)
+    try:
+        _id = database['col_shape'].insert_one(doc2)
+    except Exception as e:
+        rospy.loginfo(e)
 
 def start_cb(msg):
     start()

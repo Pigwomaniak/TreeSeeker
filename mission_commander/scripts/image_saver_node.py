@@ -40,7 +40,7 @@ def image_callback(msg):
 
 rospy.init_node('image_saver')
 
-image_topic = "/mission_commander/object_photo"
+image_topic = "/jetbot_camera/raw"
 # Set up your subscriber and define its callback
 Image_sub = rospy.Subscriber(image_topic, Image, image_callback)
 

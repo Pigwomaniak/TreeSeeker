@@ -2,5 +2,5 @@
     <rosparam command="load" file="$(find mission_commander)/config/3color.yaml" />
     <node pkg="mission_commander" type="mission_commander_3color" name="mission_commander_3color" output="screen" />
     <node pkg="mission_commander" type="image_saver_node.py" name="image_saver" output="screen" />
-    <node pkg="mission_commander" type="insert_data_to_db_colors.py" name="insert_data_to_db_colors" output="screen" />
+   
 </launch>
