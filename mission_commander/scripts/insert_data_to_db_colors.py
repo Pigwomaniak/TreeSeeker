@@ -14,16 +14,20 @@ from std_msgs.msg import Header, String
 from trajectory_planer_msgs.msg import TrajectoryPlaner
 import tf
 # Credentials will be sent to you by e-mail
-USER = 'XXX'
-PASSWORD = 'YYY'
+USER = 'team_491'
+PASSWORD = 'kZVAVxVd6ONO'
 
 VEHICLE_ID = 1
 # Host IP and port will be sent to you by e-mail
-HOST = "127.0.0.1"
-PORT = 27017
+HOST = "195.216.97.232"
+PORT = 27027
 
 # By default the user database has the same name as the user, if something changes we will let you know.
 DATABASE = USER
+
+latitude = 0
+longitude = 0
+altitude = 0
 
 def connect_to_database():
     """
@@ -192,12 +196,20 @@ def finish():
 
 pose_initialized = False
 euler = (0,0,0)
+
+
 def gps_callback(msg):
     if(not pose_initialized):
-         return
+        return
     x_lat = msg.latitude
     y_long = msg.longitude
     z_alt = msg.altitude
+    global latitude
+    latitude = msg.latitude
+    global longitude
+    longitude = msg.longitude
+    global altitude
+    altitude = msg.altitude
     gps_rpy('uav', VEHICLE_ID, x_lat, y_long, z_alt, *euler)
 
 
@@ -206,29 +218,37 @@ def pose_callback(msg):
     pose_initialized = True
     pose = msg.pose
     quaternion = (
-    pose.orientation.x,
-    pose.orientation.y,
-    pose.orientation.z,
-    pose.orientation.w)
+        pose.orientation.x,
+        pose.orientation.y,
+        pose.orientation.z,
+        pose.orientation.w)
     euler = tf.transformations.euler_from_quaternion(quaternion)
 
-def trajectory_callback(msg):
-    if (msg.mode != 'global'):
-        return
-    if (col_shape.idClassObject == 1):
-        col_shape('triangle', 'brown', 0.25, msg.pos1, msg.pos2, bytes("hellothere", 'utf-8'))
-    if (col_shape.idClassObject == 2):
-        col_shape('square', 'gold', 0.25, msg.pos1, msg.pos2, bytes("hellothere", 'utf-8'))
-    if (col_shape.idClassObject == 3):
-        col_shape('circle', 'beige', 0.25, msg.pos1, msg.pos2, bytes("hellothere", 'utf-8'))
+
+def founded_object_cb(msg):
+    global latitude
+    global longitude
+    tol_detect(msg.data, latitude, longitude, bytes("hellothere", 'utf-8'))
+    if msg.data == "square":
+        col_shape(msg.data, color="beige", surface=1, gps_latitude=latitude, gps_longitude=longitude)
+    if msg.data == "triangle":
+        col_shape(msg.data, color="brown", surface=1, gps_latitude=latitude, gps_longitude=longitude)
+    if msg.data == "circle":
+        col_shape(msg.data, color="beige", surface=1, gps_latitude=latitude, gps_longitude=longitude)
+
+
+def start_cb(msg):
+    start()
+
 
 def main():
-    rospy.init_node("insert_data_to_db_colors")
+    rospy.init_node("insert_data_to_db_trees")
     r = rospy.Rate(10)
-    start()
-    gps_subscriber = rospy.Subscriber('global_position/global', NavSatFix, callback=gps_callback)
-    pose_subscriber = rospy.Subscriber('local_position/pose', PoseStamped, callback=pose_callback)
-    trajectory_planner = rospy.Subscriber('/trajectory_planer/waypoint_reach', TrajectoryPlaner, callback=trajectory_callback)
+    start_subscriber = rospy.Subscriber('/mission_commander/mission_start', String, callback=start_cb)
+    gps_subscriber = rospy.Subscriber('/mavros/global_position/global', NavSatFix, callback=gps_callback)
+    pose_subscriber = rospy.Subscriber('/mavros/local_position/local/pose', PoseStamped, callback=pose_callback)
+    founded_object_subscriber = rospy.Subscriber('/mission_commander/founded_object', String, callback=founded_object_cb)
+    connect_to_database()
     while not rospy.is_shutdown():
         r.sleep()
     finish()

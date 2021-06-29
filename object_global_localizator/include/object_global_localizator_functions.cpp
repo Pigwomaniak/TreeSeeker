@@ -4,6 +4,7 @@ sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
 //std_msgs::Int8 objects_in_camera_view;
 ros::Publisher object_global_position_pub;
+ros::Publisher object_area_pub;
 darknet_ros_msgs::BoundingBoxes boundingBoxes;
 
 bool globalPosGlobalFlag;
@@ -52,6 +53,7 @@ void setup_camera_rotation(double pitch){
 
 void init_publisher(ros::NodeHandle controlNode){
     object_global_position_pub = controlNode.advertise<object_global_localizator_msgs::ObjectsGlobalPositions>("/object_global_localizator", 1);
+    object_area_pub = controlNode.advertise<std_msgs::Float64>("/object_area", 1);
 }
 
 void localizeObjects(ros::NodeHandle controlNode){
@@ -63,6 +65,7 @@ void localizeObjects(ros::NodeHandle controlNode){
     controlNode.getParam("/object_global_localizator/cameraXAngle", cameraXAngle);
     controlNode.getParam("/object_global_localizator/cameraYAngle", cameraYAngle);
     object_global_localizator_msgs::ObjectsGlobalPositions outMessage;
+    std_msgs::Float64 outArea;
     for (const auto & bounding_boxe : boundingBoxes.bounding_boxes) {
         object_global_localizator_msgs::ObjectGlobalPosition objectGlobalPosition;
         objectGlobalPosition.classObject = bounding_boxe.Class;
@@ -91,8 +94,8 @@ void localizeObjects(ros::NodeHandle controlNode){
         objectGlobalPosition.altitude = global_position.altitude - local_position.pose.pose.position.z;
         objectGlobalPosition.longitude = global_position.longitude + (360.0 / (40075000 * cos(global_position.latitude * M_PI / 180)) * objectLocalPositionVector[0]);
         objectGlobalPosition.latitude = global_position.latitude + objectLocalPositionVector[1] * MERES_TO_LATITUDE;
-
         outMessage.ObjectsGlobalPositions.push_back(objectGlobalPosition);
+
     }
     object_global_position_pub.publish(outMessage);
 

@@ -7,6 +7,7 @@
 #include <sensor_msgs/NavSatFix.h>
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Int8.h>
+#include <std_msgs/Float64.h>
 #include <darknet_ros_msgs/BoundingBoxes.h>
 #include <object_global_localizator_msgs/ObjectGlobalPosition.h>
 #include <object_global_localizator_msgs/ObjectsGlobalPositions.h>

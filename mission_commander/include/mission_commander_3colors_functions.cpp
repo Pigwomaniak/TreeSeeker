@@ -19,6 +19,8 @@ ros::Publisher set_mode_pub;
 ros::Publisher set_global_pos_pub;
 ros::Publisher waypoint_reach_pub;
 ros::Publisher object_photo_pub;
+ros::Publisher founded_object_pub;
+ros::Publisher mission_start_pub;
 
 ros::Subscriber global_pose_sub;
 ros::Subscriber local_pose_sub;
@@ -69,6 +71,8 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     mav_state_sub = controlNode.subscribe("/mavros/state", 1, mav_state_cb);
     extended_mav_state_sub = controlNode.subscribe("/mavros/extended_state", 1, ext_mav_state_cb);
     yolo_Photo_sub = controlNode.subscribe("/darknet_ros/detection_image", 1, yolo_photo_cb);
+    founded_object_pub = controlNode.advertise<std_msgs::String>("/mission_commander/founded_object", 1);
+    mission_start_pub = controlNode.advertise<std_msgs::String>("/mission_commander/mission_start", 1);
     // Services
     //ball_droper_client = controlNode.serviceClient<ball_droper_msgs::drop_ball>("drop_ball");
 }
@@ -79,6 +83,9 @@ MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::O
         ros::Duration(0.5).sleep();
         return MissionState::waitingForArm;
     }
+    std_msgs::String msg;
+    msg.data = "Mission Start";
+    mission_start_pub.publish(msg);
     *takeOffPointWGS84 = global_position;
     *takeOffPoint = local_position;
     ROS_INFO("ARMED");
@@ -160,11 +167,21 @@ MissionState takeCloseLook(ros::NodeHandle controlNode){
         trajectory_planer_msgs::TrajectoryPlaner waypointToTreeOld = waypointToTree;
         needPhoto = true;
         ros::spinOnce();
-        ros::Duration(2).sleep();
+        ros::Duration(3).sleep();
+        ros::spinOnce();
         if(waypointToTreeOld.updateCounter + 10 < waypointToTree.updateCounter){
             waypoint_reach_pub.publish(waypointToTreeOld);
             return MissionState::goToNextObject;
         }
+        std_msgs::String objectClass_msg;
+        if (waypointToTree.idClassObject == 1){
+            objectClass_msg.data = "triangle";
+        } else if(waypointToTree.idClassObject == 2){
+            objectClass_msg.data = "square";
+        } else {
+            objectClass_msg.data = "circle";
+        }
+        founded_object_pub.publish(objectClass_msg);
         waypoint_reach_pub.publish(waypointToTree);
         object_photo_pub.publish(yoloImage);
         needPhoto = false;

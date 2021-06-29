@@ -1,13 +1,13 @@
 3color:
   #   points
-  pointALo: 0
-  pointALa: 0
-  pointBLo: 0
-  pointBLa: 0
-  pointCLo: 0
-  pointCLa: 0
-  pointDLo: 0
-  pointDLa: 0
+  pointALo: 16.242506
+  pointALa: 52.238343
+  pointBLo: 16.241844
+  pointBLa: 52.236878
+  pointCLo: 16.238118
+  pointCLa: 52.237547
+  pointDLo: 16.238847
+  pointDLa: 52.238991
 
   numberOfPaths: 12
 
@@ -17,8 +17,8 @@
   closeLookAlt: 5.0   # [m]
   #  conversions
   #  aslToWGS83: -33.5  # Łódź
-  #  aslToWGS83: -37.0  # Kąkolewo
-  aslToWGS83: -10.0   # Simulation Gazebo
+  aslToWGS83: -37.0  # Kąkolewo
+  #  aslToWGS83: -10.0   # Simulation Gazebo
 
   #   Accuracy
   waypointPositionAccuracy: 0.8   # [m]
