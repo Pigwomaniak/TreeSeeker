@@ -4,7 +4,7 @@ sensor_msgs::NavSatFix global_position;
 nav_msgs::Odometry local_position;
 //std_msgs::Int8 objects_in_camera_view;
 ros::Publisher object_global_position_pub;
-ros::Publisher object_area_pub;
+//ros::Publisher object_area_pub;
 darknet_ros_msgs::BoundingBoxes boundingBoxes;
 
 bool globalPosGlobalFlag;
@@ -53,7 +53,7 @@ void setup_camera_rotation(double pitch){
 
 void init_publisher(ros::NodeHandle controlNode){
     object_global_position_pub = controlNode.advertise<object_global_localizator_msgs::ObjectsGlobalPositions>("/object_global_localizator", 1);
-    object_area_pub = controlNode.advertise<std_msgs::Float64>("/object_area", 1);
+//    object_area_pub = controlNode.advertise<std_msgs::Float64>("/object_area", 1);
 }
 
 void localizeObjects(ros::NodeHandle controlNode){
@@ -94,6 +94,9 @@ void localizeObjects(ros::NodeHandle controlNode){
         objectGlobalPosition.altitude = global_position.altitude - local_position.pose.pose.position.z;
         objectGlobalPosition.longitude = global_position.longitude + (360.0 / (40075000 * cos(global_position.latitude * M_PI / 180)) * objectLocalPositionVector[0]);
         objectGlobalPosition.latitude = global_position.latitude + objectLocalPositionVector[1] * MERES_TO_LATITUDE;
+        double xBox = abs(bounding_boxe.xmin - bounding_boxe.xmax) / (cameraXMax) * (objectGlobalPosition.distanceDroneToObject * tan(cameraXAngle/2) * 2);
+        double yBox = abs(bounding_boxe.ymin - bounding_boxe.ymax) / (cameraYMax) * (objectGlobalPosition.distanceDroneToObject * tan(cameraYAngle/2) * 2);
+        objectGlobalPosition.area = xBox * yBox;
         outMessage.ObjectsGlobalPositions.push_back(objectGlobalPosition);
 
     }

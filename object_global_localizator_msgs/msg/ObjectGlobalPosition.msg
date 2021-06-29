@@ -7,3 +7,4 @@ float64 latitude
 float64 longitude
 float64 altitude
 float64 distanceDroneToObject
+float64 area

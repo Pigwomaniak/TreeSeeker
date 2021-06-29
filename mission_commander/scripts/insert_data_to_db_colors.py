@@ -15,7 +15,7 @@ from trajectory_planer_msgs.msg import TrajectoryPlaner
 import tf
 # Credentials will be sent to you by e-mail
 USER = 'team_491'
-PASSWORD = 'kZVAVxVd6ONO'
+PASSWORD = 'kZVAVxVd6ON0'
 
 VEHICLE_ID = 1
 # Host IP and port will be sent to you by e-mail
