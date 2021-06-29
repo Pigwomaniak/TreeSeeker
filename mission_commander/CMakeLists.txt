@@ -166,6 +166,9 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
  catkin_install_python(PROGRAMS
          scripts/image_saver_node.py
+         scripts/test.py
+         scripts/insert_data_to_db_trees.py
+         scripts/insert_data_to_db_colors.py
          #   scripts/my_python_script
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )

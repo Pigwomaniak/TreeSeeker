@@ -19,6 +19,8 @@ ros::Publisher set_mode_pub;
 ros::Publisher set_global_pos_pub;
 ros::Publisher waypoint_reach_pub;
 ros::Publisher object_photo_pub;
+ros::Publisher founded_object_pub;
+ros::Publisher mission_start_pub;
 
 ros::Subscriber global_pose_sub;
 ros::Subscriber local_pose_sub;
@@ -61,6 +63,9 @@ void init_publisher_subscriber(ros::NodeHandle controlNode){
     set_mode_pub = controlNode.advertise<std_msgs::String>("/drone_ridder/set_mode", 1);
     set_global_pos_pub = controlNode.advertise<geographic_msgs::GeoPoseStamped>("/drone_ridder/set_global_position", 1);
     waypoint_reach_pub = controlNode.advertise<trajectory_planer_msgs::TrajectoryPlaner>("/trajectory_planer/waypoint_reach", 1);
+    founded_object_pub = controlNode.advertise<std_msgs::String>("/mission_commander/founded_object", 1);
+    mission_start_pub = controlNode.advertise<std_msgs::String>("/mission_commander/mission_start", 1);
+
     //Subscribers
     global_pose_sub = controlNode.subscribe("/mavros/global_position/global", 1, global_pos_cb);
     local_pose_sub = controlNode.subscribe("/mavros/global_position/local", 1, local_pos_cb);
@@ -81,6 +86,9 @@ MissionState startMission(sensor_msgs::NavSatFix* takeOffPointWGS84, nav_msgs::O
     *takeOffPointWGS84 = global_position;
     *takeOffPoint = local_position;
     ROS_INFO("ARMED");
+    std_msgs::String msg;
+    msg.data = "Mission Start";
+    mission_start_pub.publish(msg);
     return MissionState::gettingOnMissionStartPlace;
 }
 
@@ -246,11 +254,16 @@ MissionState dropBall(const ros::NodeHandle& controlNode){
         }
         ball_droper_msgs::drop_ball ball_srv;
         ros::Duration(2).sleep();
+        std_msgs::String founded_object_msg;
         if(waypointToTree.idClassObject == 2){
             ball_srv.request.ball_to_drop = "A";
+            founded_object_msg.data = "bridge";
+            founded_object_pub.publish(founded_object_msg);
         }
         if(waypointToTree.idClassObject == 3){
             ball_srv.request.ball_to_drop = "B";
+            founded_object_msg.data = "gold";
+            founded_object_pub.publish(founded_object_msg);
         }
         ball_droper_client.call(ball_srv);
         ROS_INFO("Ball dropped");
