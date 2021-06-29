@@ -1,5 +1,5 @@
+#! /usr/bin/env python
 import datetime
-#!/usr/bin/python3
 import pymongo
 import sys
 import cv2
@@ -223,6 +223,7 @@ def trajectory_callback(msg):
         col_shape('circle', 'beige', 0.25, msg.pos1, msg.pos2, bytes("hellothere", 'utf-8'))
 
 def main():
+    rospy.init_node("insert_data_to_db_colors")
     r = rospy.Rate(10)
     start()
     gps_subscriber = rospy.Subscriber('global_position/global', NavSatFix, callback=gps_callback)

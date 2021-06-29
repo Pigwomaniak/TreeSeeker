@@ -1,9 +1,10 @@
-import datetime
-#!/usr/bin/python3
+#! /usr/bin/env python
+
 import pymongo
 import sys
 import cv2
 import rospy
+import datetime
 from cv_bridge import CvBridge
 from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry, Path
@@ -240,6 +241,7 @@ def start_cb(msg):
 
 
 def main():
+    rospy.init_node("insert_data_to_db_trees")
     r = rospy.Rate(10)
     start_subscriber = rospy.Subscriber('/mission_commander/mission_start', String, callback=start_cb)
     gps_subscriber = rospy.Subscriber('/mavros/global_position/global', NavSatFix, callback=gps_callback)

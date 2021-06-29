@@ -1,5 +1,5 @@
 <launch>
-    <include file="mission_commander_3color.launch"/>
+    <include file="$(find mission_commander)/launch/mission_commander_3colors.launch"/>
     <include file="$(find mavros)/launch/apm.launch" />
     <node pkg="jetbot_ros" type="jetbot_camera" name="jetbot_camera" output="screen"/>
     <node pkg="drone_ridder" type="drone_ridder" name="drone_ridder" output="screen" />
